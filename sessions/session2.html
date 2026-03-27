@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechTicket | Code Challenge Championship Training</title>
+    <link rel="icon" href="../logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           CSS VARIABLES & THEME
+           ========================================================================== */
+        :root {
+            /* Colors - Dark Developer Theme */
+            --bg-body: #060b14;
+            --bg-card: #0f172a;
+            --bg-card-hover: #1e293b;
+            --bg-code: #020617;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981; /* Sports theme accent */
+            --accent-yellow: #f59e0b;
+            --accent-pink: #ec4899;
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            --gradient-comp: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+            
+            /* Typography */
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --font-code: 'Fira Code', monospace;
+            
+            /* UI Elements */
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.4); /* Green glow */
+            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ==========================================================================
+           GLOBAL RESETS
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        /* Background Grid Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(51, 65, 85, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(51, 65, 85, 0.15) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           TYPOGRAPHY
+           ========================================================================== */
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        h1 { font-size: 2.5rem; font-weight: 800; text-align: center; }
+        
+        h2 { 
+            font-size: 1.8rem; 
+            font-weight: 700;
+            color: var(--accent-cyan);
+            border-bottom: 2px solid var(--border-color, #334155);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h3 { font-size: 1.4rem; color: var(--accent-green); margin-top: 1.5rem; }
+        h4 { font-size: 1.1rem; color: var(--accent-blue); }
+
+        p { margin-bottom: 1.2rem; }
+        ul, ol { margin-left: 1.5rem; margin-bottom: 1.2rem; }
+        li { margin-bottom: 0.5rem; }
+
+        strong { color: var(--accent-cyan); font-weight: 600; }
+        em { color: var(--accent-green); font-style: normal; font-weight: 600; }
+
+        code:not(pre code) {
+            background: rgba(16, 185, 129, 0.15); /* Green tint */
+            color: var(--accent-green);
+            padding: 0.2em 0.4em;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9em;
+        }
+
+        /* ==========================================================================
+           LAYOUT
+           ========================================================================== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(180deg, #0f172a 0%, var(--bg-body) 100%);
+            padding: 3rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color, #334155);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .championship-badge {
+            display: inline-block;
+            background: var(--gradient-comp);
+            color: #020617; /* Dark text for contrast against green/cyan */
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 4px 25px rgba(16, 185, 129, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+        }
+
+        .logo-container img {
+            max-height: 50px;
+            margin-bottom: 1rem;
+        }
+
+        .program-title {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cards (Sections) */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--border-color, #334155);
+            box-shadow: var(--shadow-card);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0.5;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #475569;
+            box-shadow: var(--shadow-glow);
+        }
+        .card:hover::before { opacity: 1; }
+
+        .card.comp-card::before { background: var(--gradient-comp); opacity: 0.8; }
+        .card.comp-card { border-color: rgba(16, 185, 129, 0.3); }
+
+        /* ==========================================================================
+           CODE BLOCKS (VS Code Style)
+           ========================================================================== */
+        .code-window {
+            background-color: var(--bg-code);
+            border-radius: var(--radius-md);
+            border: 1px solid #334155;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .code-header {
+            background-color: #0f172a;
+            padding: 0.6rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .mac-dots { display: flex; gap: 6px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background-color: #ef4444; }
+        .dot-yellow { background-color: #f59e0b; }
+        .dot-green { background-color: #10b981; }
+
+        .code-tab {
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .btn-copy {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--text-muted);
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-copy:hover {
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .btn-copy.copied {
+            background: var(--accent-green);
+            color: #020617;
+            border-color: var(--accent-green);
+        }
+
+        pre { padding: 1.5rem; overflow-x: auto; margin: 0; }
+        pre code {
+            font-family: var(--font-code);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        /* Syntax Highlighting */
+        .sy-tag { color: #f472b6; } /* Pink */
+        .sy-attr { color: #fbbf24; } /* Yellow */
+        .sy-val { color: #34d399; } /* Green */
+        .sy-sel { color: #60a5fa; } /* Blue */
+        .sy-prop { color: #38bdf8; } /* Cyan */
+        .sy-num { color: #c084fc; } /* Purple */
+        .sy-cmt { color: #64748b; font-style: italic; } /* Gray */
+
+        /* ==========================================================================
+           VISUAL DIAGRAMS & DEMOS
+           ========================================================================== */
+        .demo-panel {
+            background-color: var(--bg-code);
+            border: 1px dashed #475569;
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            overflow-x: auto;
+        }
+
+        /* Flexbox Visualization Container */
+        .flex-visual-container {
+            width: 100%;
+            background-color: #1e293b;
+            border: 2px dashed var(--accent-blue);
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            display: flex; /* Magic! */
+            gap: 1rem;
+            min-height: 120px;
+            transition: var(--transition);
+        }
+
+        .flex-visual-item {
+            background: var(--accent-blue);
+            color: white;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: var(--font-code);
+            border: 2px solid #020617;
+            text-align: center;
+        }
+
+        /* Card Component Visuals */
+        .ui-card-visual {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: var(--transition);
+        }
+        
+        .ui-card-visual:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            border-color: var(--accent-cyan);
+        }
+
+        .ui-card-icon {
+            font-size: 2.5rem;
+            color: var(--accent-green);
+        }
+
+        .ui-card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .ui-card-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .ui-card-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            align-self: flex-start;
+            transition: var(--transition);
+        }
+
+        .ui-card-btn:hover { background: var(--accent-cyan); color: #000; }
+
+        /* Interactive Demo Controls */
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            background: #0f172a;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            width: 100%;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .control-group label {
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            font-family: var(--font-code);
+        }
+
+        .control-group select {
+            background: var(--bg-code);
+            color: white;
+            border: 1px solid var(--accent-blue);
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: var(--font-sans);
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* ==========================================================================
+           INTERACTIVE FEATURES (Hints & Expandables)
+           ========================================================================== */
+        .collapsible-btn {
+            background: transparent;
+            color: var(--accent-green);
+            border: none;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 0;
+            font-family: var(--font-sans);
+            width: 100%;
+            text-align: left;
+            margin-top: 1rem;
+        }
+        .collapsible-btn::before { content: '▶'; font-size: 0.8em; transition: transform 0.2s; }
+        .collapsible-btn.active::before { transform: rotate(90deg); }
+
+        .collapsible-content {
+            display: none;
+            padding: 1.5rem;
+            background-color: rgba(15, 23, 42, 0.8);
+            border-left: 2px solid var(--accent-green);
+            border-radius: 0 0 8px 8px;
+            margin-top: 0.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Exercise Boxes */
+        .exercise-box {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-left: 4px solid var(--accent-blue);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .challenge-box {
+            background: rgba(16, 185, 129, 0.05); /* Green tint for sports */
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-left: 4px solid var(--accent-green);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .btn-hint {
+            background: transparent;
+            color: var(--accent-yellow);
+            border: 1px solid var(--accent-yellow);
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        .btn-hint:hover { background: var(--accent-yellow); color: #000; }
+
+        .hint-content {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(245, 158, 11, 0.05);
+            border-left: 2px solid var(--accent-yellow);
+            border-radius: 0 4px 4px 0;
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================================
+           NAVIGATION & FOOTER
+           ========================================================================== */
+        .session-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color, #334155);
+        }
+
+        .nav-btn {
+            background: var(--bg-card);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            border: 1px solid var(--border-color, #334155);
+            transition: var(--transition);
+            text-align: center;
+            flex: 1;
+            margin: 0 0.5rem;
+        }
+        .nav-btn:hover { background: var(--accent-green); color: #020617; border-color: var(--accent-green); }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            margin-top: 4rem;
+            background: #020617;
+            border-top: 1px solid var(--border-color, #334155);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ==========================================================================
+           RESPONSIVE DESIGN
+           ========================================================================== */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .card { padding: 1.5rem; }
+            h1 { font-size: 2rem; }
+            .session-nav { flex-direction: column; gap: 1rem; }
+            .nav-btn { margin: 0; width: 100%; }
+            .demo-controls { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-pattern"></div>
+
+    <header>
+        <span class="championship-badge">&#9889; Championship Training</span>
+        <div class="logo-container">
+            <img src="../logo.png" alt="TechTicket Logo" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'250\' height=\'50\'><text x=\'0\' y=\'40\' font-family=\'Arial\' font-size=\'32\' font-weight=\'bold\' fill=\'%2306b6d4\'><tspan fill=\'%23f8fafc\'&gt;Tech&lt;/tspan&gt;Ticket</text></svg>'">
+        </div>
+        <div class="program-title">Code Challenge Web Track</div>
+        <h1>Session 2 — Card Layout Systems & Flexbox Mastery</h1>
+    </header>
+
+    <main class="container">
+
+        <section class="card comp-card">
+            <h2>🎯 Session Overview</h2>
+            <p>Welcome back to Championship Training! Look at any modern website—Netflix, Amazon, YouTube. What do they all have in common? <strong>Cards.</strong></p>
+            <p>A "Card" is a small, self-contained box that holds information (like a video thumbnail, a product, or a sports team). Organizing these cards neatly is the #1 skill you need for web design competitions.</p>
+            <p>In this session, you will learn:</p>
+            <ul>
+                <li>What a <strong>Card UI (User Interface)</strong> is and how to build one.</li>
+                <li>Why <strong>Flexbox</strong> is the ultimate tool for placing cards side-by-side.</li>
+                <li>How to create the classic <strong>3-Column Layout</strong>.</li>
+                <li>How to align, space, and beautifully style card components.</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>🏆 The Competition Context</h2>
+            <p>In almost every HTML/CSS competition, you will be asked to build a "Features Section" or a "Products Display". This ALWAYS requires a <strong>multi-column card layout</strong>.</p>
+            <p><strong>The Constraints:</strong></p>
+            <ul>
+                <li>❌ <strong>No Images:</strong> You cannot download icons. We will use Unicode characters (like ⛳) to "fake" icons!</li>
+                <li>❌ <strong>No JavaScript:</strong> The layout must be purely CSS.</li>
+                <li>✅ <strong>Flexbox is required:</strong> Judges look for modern <code>display: flex</code> solutions, not old, hacky layout methods.</li>
+            </ul>
+            <p>Let's build the ultimate flexbox card system.</p>
+        </section>
+
+        <section class="card">
+            <h2>📦 The Card Component & Flexbox</h2>
+            
+            <h3>1. The Card Anatomy</h3>
+            <p>A standard card is just a <code>&lt;div&gt;</code> that contains a few smaller pieces of information. Usually an Icon, a Title, a Description, and a Button.</p>
+            
+            <div class="demo-panel">
+                <div class="ui-card-visual">
+                    <div class="ui-card-icon">&#9917;</div> <div class="ui-card-title">Pro Golfing</div>
+                    <div class="ui-card-desc">Learn the perfect swing and dominate the green.</div>
+                    <button class="ui-card-btn">Read More</button>
+                </div>
+            </div>
+
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="mac-dot dot-red"></div><div class="mac-dot dot-yellow"></div><div class="mac-dot dot-green"></div></div>
+                    <span class="code-tab">HTML</span>
+                    <button class="btn-copy" onclick="copyCode('code-card-html', this)">Copy Code</button>
+                </div>
+<pre id="code-card-html"><code><span class="sy-cmt">&lt;!-- A basic card structure --&gt;</span>
+<span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"card"</span><span class="sy-tag">&gt;</span>
+  <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"icon"</span><span class="sy-tag">&gt;</span>&amp;#9917;<span class="sy-tag">&lt;/div&gt;</span> <span class="sy-cmt">&lt;!-- Unicode Icon --&gt;</span>
+  <span class="sy-tag">&lt;h3&gt;</span>Pro Golfing<span class="sy-tag">&lt;/h3&gt;</span>
+  <span class="sy-tag">&lt;p&gt;</span>Learn the perfect swing.<span class="sy-tag">&lt;/p&gt;</span>
+  <span class="sy-tag">&lt;a</span> <span class="sy-attr">href</span>=<span class="sy-val">"#"</span> <span class="sy-attr">class</span>=<span class="sy-val">"btn"</span><span class="sy-tag">&gt;</span>Read More<span class="sy-tag">&lt;/a&gt;</span>
+<span class="sy-tag">&lt;/div&gt;</span></code></pre>
+            </div>
+
+            <h3>2. The Flexbox Container</h3>
+            <p>If we create 3 cards in HTML, they will stack on top of each other. To put them side-by-side, we must wrap them in a Parent Container and apply <strong>Flexbox</strong>.</p>
+            
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="mac-dot dot-red"></div><div class="mac-dot dot-yellow"></div><div class="mac-dot dot-green"></div></div>
+                    <span class="code-tab">CSS</span>
+                    <button class="btn-copy" onclick="copyCode('code-flex-basic', this)">Copy Code</button>
+                </div>
+<pre id="code-flex-basic"><code><span class="sy-sel">.card-container</span> {
+  <span class="sy-prop">display</span>: <span class="sy-val">flex</span>;               <span class="sy-cmt">/* Turns on Flexbox (Side-by-side!) */</span>
+  <span class="sy-prop">justify-content</span>: <span class="sy-val">center</span>;     <span class="sy-cmt">/* Centers cards horizontally */</span>
+  <span class="sy-prop">align-items</span>: <span class="sy-val">stretch</span>;        <span class="sy-cmt">/* Makes all cards the same height */</span>
+  <span class="sy-prop">gap</span>: <span class="sy-num">20px</span>;                   <span class="sy-cmt">/* Adds space between the cards */</span>
+}</code></pre>
+            </div>
+
+            <button class="collapsible-btn" onclick="toggleElement('explain-flex', this)">Explain the Flexbox Properties</button>
+            <div id="explain-flex" class="collapsible-content">
+                <p><strong><code>display: flex;</code></strong> By default, this forces all child elements to line up in a horizontal row.</p>
+                <p><strong><code>justify-content</code></strong> controls the horizontal alignment. <code>center</code> pushes them to the middle. <code>space-between</code> pushes them to the edges.</p>
+                <p><strong><code>align-items</code></strong> controls vertical alignment. <code>stretch</code> is magic—it forces all cards in the row to stretch down and match the height of the tallest card!</p>
+                <p><strong><code>gap</code></strong> is the modern way to add space between flex items without messing with margins.</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>🕹️ Interactive Demo: Flexbox Playground</h2>
+            <p>Use the dropdowns to change the CSS properties on the Parent Container. Watch how the 3 child cards react!</p>
+
+            <div class="demo-panel">
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>justify-content</label>
+                        <select id="demo-justify" onchange="updateFlexboxDemo()">
+                            <option value="flex-start">flex-start (Left)</option>
+                            <option value="center" selected>center</option>
+                            <option value="flex-end">flex-end (Right)</option>
+                            <option value="space-between">space-between</option>
+                            <option value="space-around">space-around</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>align-items</label>
+                        <select id="demo-align" onchange="updateFlexboxDemo()">
+                            <option value="stretch" selected>stretch (Equal Height)</option>
+                            <option value="flex-start">flex-start (Top)</option>
+                            <option value="center">center (Middle)</option>
+                            <option value="flex-end">flex-end (Bottom)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>gap</label>
+                        <select id="demo-gap" onchange="updateFlexboxDemo()">
+                            <option value="0px">0px</option>
+                            <option value="10px">10px</option>
+                            <option value="20px" selected>20px</option>
+                            <option value="40px">40px</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="demo-container" class="flex-visual-container" style="justify-content: center; align-items: stretch; gap: 20px;">
+                    <div class="flex-visual-item" style="flex: 1;">Card 1</div>
+                    <div class="flex-visual-item" style="flex: 1; padding: 3rem 1rem;">Card 2<br>(Taller)</div>
+                    <div class="flex-visual-item" style="flex: 1;">Card 3</div>
+                </div>
+            </div>
+            <p><em>Pro Tip: Notice how setting <code>align-items: stretch</code> forces Card 1 and Card 3 to match the height of the taller Card 2! This makes your UI look extremely professional.</em></p>
+        </section>
+
+        <section class="card">
+            <h2>📐 Creating Equal-Width Columns</h2>
+            <p>If you put text inside 3 cards, Flexbox will automatically make cards with more text wider than cards with less text. To win a design competition, your layout must be perfectly symmetrical.</p>
+            <p>We force cards to be equal width by applying a property directly to the <strong>Child Item</strong>.</p>
+
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="mac-dot dot-red"></div><div class="mac-dot dot-yellow"></div><div class="mac-dot dot-green"></div></div>
+                    <span class="code-tab">CSS (The Child)</span>
+                    <button class="btn-copy" onclick="copyCode('code-flex-child', this)">Copy Code</button>
+                </div>
+<pre id="code-flex-child"><code><span class="sy-sel">.card</span> {
+  <span class="sy-prop">flex</span>: <span class="sy-val">1</span>; <span class="sy-cmt">/* Magic Trick: Forces all cards to take exactly equal space! */</span>
+  
+  <span class="sy-cmt">/* Beautiful styling below */</span>
+  <span class="sy-prop">background-color</span>: <span class="sy-val">#1e293b</span>;
+  <span class="sy-prop">padding</span>: <span class="sy-num">30px</span>;
+  <span class="sy-prop">border-radius</span>: <span class="sy-num">12px</span>;
+  <span class="sy-prop">box-shadow</span>: <span class="sy-val">0 10px 15px rgba(0,0,0,0.5)</span>;
+}</code></pre>
+            </div>
+            <p><code>flex: 1;</code> tells the browser: "Divide the available space evenly, and give exactly 1 share to every card."</p>
+        </section>
+
+        <section class="card">
+            <h2>🏋️‍♂️ Training Drills</h2>
+            <p>Open your code editor. Build these layouts. Remember: <strong>NO images allowed!</strong></p>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 1 (Easy): The Solo Card</h4>
+                <p>Create a single <code>&lt;div class="card"&gt;</code>. Add an <code>h3</code> title, a <code>p</code> description, and style the card with a dark background, 20px padding, and rounded corners.</p>
+                <button class="btn-hint" onclick="toggleElement('hint1', this)">💡 Show Hint</button>
+                <div id="hint1" class="hint-content">
+                    <code>.card { background: #1e293b; padding: 20px; border-radius: 8px; }</code>
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 2 (Medium): The Flex Row</h4>
+                <p>Wrap your card in a <code>&lt;div class="card-container"&gt;</code>. Copy/paste the card so you have 3 of them. Use Flexbox on the container to put them side-by-side with a 15px gap.</p>
+                <button class="btn-hint" onclick="toggleElement('hint2', this)">💡 Show Hint</button>
+                <div id="hint2" class="hint-content">
+                    <code>.card-container { display: flex; gap: 15px; }</code>
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 3 (Hard): Equalize & Polish</h4>
+                <p>Add different amounts of text to each card. Notice how the widths break? Fix it by applying <code>flex: 1;</code> to the <code>.card</code> class. Add a hover effect that moves the card up slightly!</p>
+                <button class="btn-hint" onclick="toggleElement('hint3', this)">💡 Show Hint</button>
+                <div id="hint3" class="hint-content">
+                    <code>.card { flex: 1; transition: 0.3s; }</code><br>
+                    <code>.card:hover { transform: translateY(-10px); }</code>
+                </div>
+            </div>
+        </section>
+
+        <section class="card challenge-box">
+            <h2 style="color: var(--accent-green); border-bottom-color: rgba(16, 185, 129, 0.3);">🔥 Competition Task: Sports Display</h2>
+            <p><strong>Brief:</strong> "Build a 3-column Sports Card section."</p>
+            
+            <p><strong>Requirements:</strong></p>
+            <ol>
+                <li>A main heading that says "Unleash Your Inner Athlete".</li>
+                <li>A Flexbox container holding exactly 3 cards (Golf, Baseball, Football).</li>
+                <li>Cards must be <strong>equal width</strong> and <strong>equal height</strong>.</li>
+                <li><strong>NO IMAGES:</strong> You must use Unicode characters for the sports icons (⛳, ⚾, 🏈). Make the icons large (e.g. <code>font-size: 40px;</code>).</li>
+                <li>Each card must have a "Read More" button at the bottom.</li>
+            </ol>
+            
+            <button class="btn btn-hint" style="color: var(--accent-green); border-color: var(--accent-green);" onclick="toggleElement('challenge-answer', this)">👀 Show Reference HTML Structure</button>
+            
+            <div id="challenge-answer" class="collapsible-content" style="border-left-color: var(--accent-green); background: #020617;">
+<pre style="background: transparent; padding: 0;"><code><span class="sy-tag">&lt;section</span> <span class="sy-attr">class</span>=<span class="sy-val">"sports-section"</span><span class="sy-tag">&gt;</span>
+  <span class="sy-tag">&lt;h2&gt;</span>Unleash Your Inner Athlete<span class="sy-tag">&lt;/h2&gt;</span>
+  
+  <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"card-container"</span><span class="sy-tag">&gt;</span>
+  
+    <span class="sy-cmt">&lt;!-- Card 1 --&gt;</span>
+    <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"card"</span><span class="sy-tag">&gt;</span>
+      <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"icon"</span><span class="sy-tag">&gt;</span>&amp;#9917;<span class="sy-tag">&lt;/div&gt;</span> <span class="sy-cmt">&lt;!-- Golf --&gt;</span>
+      <span class="sy-tag">&lt;h3&gt;</span>Golf<span class="sy-tag">&lt;/h3&gt;</span>
+      <span class="sy-tag">&lt;p&gt;</span>Master the perfect swing.<span class="sy-tag">&lt;/p&gt;</span>
+      <span class="sy-tag">&lt;button</span> <span class="sy-attr">class</span>=<span class="sy-val">"btn"</span><span class="sy-tag">&gt;</span>Read More<span class="sy-tag">&lt;/button&gt;</span>
+    <span class="sy-tag">&lt;/div&gt;</span>
+    
+    <span class="sy-cmt">&lt;!-- Repeat for Baseball (&amp;#9918;) and Football (&amp;#127944;) --&gt;</span>
+    
+  <span class="sy-tag">&lt;/div&gt;</span>
+<span class="sy-tag">&lt;/section&gt;</span></code></pre>
+            </div>
+        </section>
+
+        <section class="card" style="border-left: 4px solid var(--accent-cyan); background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), transparent);">
+            <h2 style="color: var(--accent-cyan); border-bottom-color: rgba(6, 182, 212, 0.2);">🏠 Homework: Level Up the Layout</h2>
+            <p>Take your Sports Display and make it competition-ready:</p>
+            <ul>
+                <li>Add a <strong>4th card</strong> (e.g. Basketball 🏀). Watch how Flexbox perfectly resizes the columns to fit 4!</li>
+                <li><strong>Make it Responsive:</strong> Right now, 4 cards on a mobile phone will be crushed. Add <code>flex-wrap: wrap;</code> to the container. Next, give the cards a <code>min-width: 200px;</code>. Now watch them beautifully stack on small screens!</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>📝 Session Summary</h2>
+            <ul>
+                <li><strong>Card UIs</strong> are the most common layout pattern in web design competitions.</li>
+                <li><strong>Flexbox</strong> is used on the <em>Parent Container</em> (<code>display: flex</code>) to line elements up side-by-side.</li>
+                <li><strong><code>justify-content</code></strong> aligns cards horizontally, and <strong><code>gap</code></strong> adds perfect spacing between them.</li>
+                <li><strong><code>align-items: stretch</code></strong> ensures all cards in a row are the exact same height.</li>
+                <li>Applying <strong><code>flex: 1;</code></strong> to the <em>Child Cards</em> forces them to ignore the length of their text and be exactly equal width.</li>
+                <li>You can use Unicode characters (Emojis) to create beautiful icons without breaking "No Images" rules!</li>
+            </ul>
+        </section>
+
+        <div class="session-nav">
+            <a href="session1.html" class="nav-btn">⬅ Previous Session</a>
+            <a href="session3.html" class="nav-btn">Next Session ➡</a>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="logo-container">
+            <img src="../logo.png" alt="TechTicket Logo" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'250\' height=\'50\'><text x=\'0\' y=\'40\' font-family=\'Arial\' font-size=\'32\' font-weight=\'bold\' fill=\'%2306b6d4\'><tspan fill=\'%23f8fafc\'&gt;Tech&lt;/tspan&gt;Ticket</text></svg>'">
+        </div>
+        <p>© TechTicket Academy — Educational material for TechTicket students only. Redistribution is not allowed.</p>
+    </footer>
+
+    <script>
+        // 1. Copy Code Functionality
+        function copyCode(elementId, btn) {
+            const codeEl = document.getElementById(elementId);
+            const text = codeEl.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = "Copied! ✓";
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // 2. Toggle Elements (Hints & Expandables)
+        function toggleElement(id, btn) {
+            const el = document.getElementById(id);
+            if (el.style.display === "block") {
+                el.style.display = "none";
+                if(btn && btn.classList.contains('collapsible-btn')) btn.classList.remove('active');
+            } else {
+                el.style.display = "block";
+                if(btn && btn.classList.contains('collapsible-btn')) btn.classList.add('active');
+            }
+        }
+
+        // 3. Flexbox Playground Logic
+        function updateFlexboxDemo() {
+            const container = document.getElementById('demo-container');
+            const justify = document.getElementById('demo-justify').value;
+            const align = document.getElementById('demo-align').value;
+            const gap = document.getElementById('demo-gap').value;
+
+            container.style.justifyContent = justify;
+            container.style.alignItems = align;
+            container.style.gap = gap;
+        }
+    </script>
+</body>
+</html>

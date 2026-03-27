@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechTicket | Session 4 - Competition Constraints & Smart Problem Solving</title>
+    <link rel="icon" href="../logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           CSS VARIABLES & THEME (Dark Developer / Warning Theme)
+           ========================================================================== */
+        :root {
+            --bg-main: #060b14;
+            --bg-card: #0f172a;
+            --bg-card-hover: #1e293b;
+            --bg-code: #020617;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-yellow: #f59e0b; /* Warning/Constraint theme */
+            --accent-orange: #f97316; /* Danger/Important theme */
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            
+            --gradient-primary: linear-gradient(135deg, var(--accent-yellow), var(--accent-orange));
+            --gradient-comp: linear-gradient(135deg, var(--accent-orange), var(--accent-red, #ef4444));
+            
+            --border-color: #334155;
+            
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --font-code: 'Fira Code', monospace;
+            
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --shadow-glow: 0 0 20px rgba(245, 158, 11, 0.4); /* Yellow glow */
+            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ==========================================================================
+           GLOBAL RESETS
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        /* Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(245, 158, 11, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(245, 158, 11, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           TYPOGRAPHY
+           ========================================================================== */
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        h1 { font-size: 2.5rem; font-weight: 800; text-align: center; }
+        
+        h2 { 
+            font-size: 1.8rem; 
+            font-weight: 700;
+            color: var(--accent-yellow);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h3 { font-size: 1.4rem; color: var(--accent-orange); margin-top: 1.5rem; }
+        h4 { font-size: 1.1rem; color: var(--accent-cyan); }
+
+        p { margin-bottom: 1.2rem; }
+        ul, ol { margin-left: 1.5rem; margin-bottom: 1.2rem; }
+        li { margin-bottom: 0.5rem; }
+
+        strong { color: var(--accent-yellow); font-weight: 600; }
+        em { color: var(--accent-orange); font-style: normal; font-weight: 600; }
+
+        code:not(pre code) {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-yellow);
+            padding: 0.2em 0.4em;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9em;
+        }
+
+        /* ==========================================================================
+           LAYOUT
+           ========================================================================== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(180deg, #0f172a 0%, var(--bg-main) 100%);
+            padding: 3rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .championship-badge {
+            display: inline-block;
+            background: var(--gradient-primary);
+            color: #020617;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 4px 25px rgba(245, 158, 11, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+        }
+
+        .logo-container img {
+            max-height: 50px;
+            margin-bottom: 1rem;
+        }
+
+        .program-title {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cards (Sections) */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0.5;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #475569;
+            box-shadow: var(--shadow-glow);
+        }
+        .card:hover::before { opacity: 1; }
+
+        .card.danger-card::before { background: var(--gradient-comp); opacity: 0.8; }
+        .card.danger-card { border-color: rgba(249, 115, 22, 0.3); }
+
+        /* ==========================================================================
+           CODE BLOCKS (VS Code Style)
+           ========================================================================== */
+        .code-window {
+            background-color: var(--bg-code);
+            border-radius: var(--radius-md);
+            border: 1px solid #334155;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .code-header {
+            background-color: #0f172a;
+            padding: 0.6rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .mac-dots { display: flex; gap: 6px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background-color: #ef4444; }
+        .dot-yellow { background-color: #f59e0b; }
+        .dot-green { background-color: #10b981; }
+
+        .code-tab {
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .btn-copy {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--text-muted);
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-copy:hover {
+            color: var(--accent-yellow);
+            border-color: var(--accent-yellow);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .btn-copy.copied {
+            background: var(--accent-green);
+            color: #020617;
+            border-color: var(--accent-green);
+        }
+
+        pre { padding: 1.5rem; overflow-x: auto; margin: 0; }
+        pre code {
+            font-family: var(--font-code);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        /* Syntax Highlighting */
+        .sy-tag { color: #f472b6; } /* Pink */
+        .sy-attr { color: #fbbf24; } /* Yellow */
+        .sy-val { color: #34d399; } /* Green */
+        .sy-sel { color: #60a5fa; } /* Blue */
+        .sy-prop { color: #38bdf8; } /* Cyan */
+        .sy-num { color: #c084fc; } /* Purple */
+        .sy-cmt { color: #64748b; font-style: italic; } /* Gray */
+
+        /* ==========================================================================
+           VISUAL DIAGRAMS & DEMOS
+           ========================================================================== */
+        .demo-panel {
+            background-color: var(--bg-code);
+            border: 1px dashed #475569;
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            overflow-x: auto;
+        }
+
+        /* Interactive Requirement Analyzer */
+        .req-analyzer {
+            background: #1e293b;
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 600px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #cbd5e1;
+        }
+
+        .req-word {
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+        
+        .req-word:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Classes applied via JS for highlighting */
+        .hl-layout { background: rgba(59, 130, 246, 0.3); border-color: var(--accent-blue); color: #fff; }
+        .hl-comp { background: rgba(236, 72, 153, 0.3); border-color: var(--accent-pink); color: #fff; }
+        .hl-rule { background: rgba(249, 115, 22, 0.3); border-color: var(--accent-orange); color: #fff; }
+
+        .req-legend {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .legend-color { width: 15px; height: 15px; border-radius: 3px; }
+        .lc-blue { background: var(--accent-blue); }
+        .lc-pink { background: var(--accent-pink); }
+        .lc-orange { background: var(--accent-orange); }
+
+        /* Flow Diagram */
+        .flow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 700px;
+            gap: 10px;
+        }
+
+        .flow-box {
+            background: #1e293b;
+            border: 2px solid var(--accent-yellow);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .flow-arrow {
+            color: var(--accent-orange);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Constraint Toggle Demo */
+        .constraint-demo-area {
+            width: 100%;
+            max-width: 500px;
+            height: 200px;
+            border: 2px dashed var(--accent-cyan);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #ffffff;
+            transition: var(--transition);
+        }
+
+        .cd-card {
+            width: 150px;
+            height: 150px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .cd-img-placeholder {
+            width: 80px; height: 80px; background: #cbd5e1; display: flex; align-items: center; justify-content: center; color: #64748b; font-weight: bold; font-size: 0.8rem; text-align: center; padding: 5px;
+        }
+        
+        .cd-css-icon {
+            width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #06b6d4); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;
+        }
+
+        /* ==========================================================================
+           INTERACTIVE BUTTONS
+           ========================================================================== */
+        .btn {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--accent-yellow);
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-sans);
+        }
+
+        .btn:hover, .btn.active {
+            background-color: var(--accent-yellow);
+            color: #020617;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-comp {
+            background: var(--gradient-comp);
+            border: none;
+            color: white;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+        }
+        .btn-comp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+        }
+
+        /* Expandable Explanations */
+        .collapsible-btn {
+            background: transparent;
+            color: var(--accent-cyan);
+            border: none;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 0;
+            font-family: var(--font-sans);
+            width: 100%;
+            text-align: left;
+            margin-top: 1rem;
+        }
+        .collapsible-btn::before { content: '▶'; font-size: 0.8em; transition: transform 0.2s; }
+        .collapsible-btn.active::before { transform: rotate(90deg); }
+
+        .collapsible-content {
+            display: none;
+            padding: 1.5rem;
+            background-color: rgba(15, 23, 42, 0.8);
+            border-left: 2px solid var(--accent-cyan);
+            border-radius: 0 0 8px 8px;
+            margin-top: 0.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Exercise Boxes */
+        .exercise-box {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-left: 4px solid var(--accent-blue);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .challenge-box {
+            background: rgba(249, 115, 22, 0.05);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            border-left: 4px solid var(--accent-orange);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .btn-hint {
+            background: transparent;
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        .btn-hint:hover { background: var(--accent-cyan); color: #000; }
+
+        .hint-content {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(6, 182, 212, 0.05);
+            border-left: 2px solid var(--accent-cyan);
+            border-radius: 0 4px 4px 0;
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================================
+           NAVIGATION & FOOTER
+           ========================================================================== */
+        .session-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-btn {
+            background: var(--bg-card);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            text-align: center;
+            flex: 1;
+            margin: 0 0.5rem;
+        }
+        .nav-btn:hover { background: var(--accent-yellow); color: #020617; border-color: var(--accent-yellow); }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            margin-top: 4rem;
+            background: #020617;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ==========================================================================
+           RESPONSIVE DESIGN
+           ========================================================================== */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .card { padding: 1.5rem; }
+            h1 { font-size: 2rem; }
+            .session-nav { flex-direction: column; gap: 1rem; }
+            .nav-btn { margin: 0; width: 100%; }
+            .flow-diagram { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); margin: 5px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-pattern"></div>
+
+    <header>
+        <span class="championship-badge"><i class="fas fa-exclamation-triangle"></i> Championship Training</span>
+        <div class="logo-container">
+            <img src="../logo.png" alt="TechTicket Logo" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'250\' height=\'50\'><text x=\'0\' y=\'40\' font-family=\'Arial\' font-size=\'32\' font-weight=\'bold\' fill=\'%23f59e0b\'><tspan fill=\'%23f8fafc\'&gt;Tech&lt;/tspan&gt;Ticket</text></svg>'">
+        </div>
+        <div class="program-title">Code Challenge Web Track</div>
+        <h1>Session 4 — Constraints & Smart Problem Solving</h1>
+    </header>
+
+    <main class="container">
+
+        <section class="card danger-card">
+            <h2>🚨 Session Overview</h2>
+            <p>Welcome to Session 4. You know HTML, CSS, Flexbox, Gradients, and Hover effects. You have the skills to build almost anything.</p>
+            <p><strong>So why do talented students lose coding competitions?</strong></p>
+            <p>They lose because they don't read the rules. They build a beautiful website, but they use an image when the rules said "No Images". Or they build 4 cards when the prompt asked for 3.</p>
+            <p>In this session, you will learn how to win by playing smart. You will learn to:</p>
+            <ul>
+                <li>Understand the strict <strong>Constraints</strong> of coding competitions.</li>
+                <li>Read a problem statement and extract the exact requirements.</li>
+                <li>Use the <strong>READ → BREAK → PLAN → BUILD</strong> method.</li>
+                <li>Build complex UIs using clever workarounds (like Unicode icons and CSS shapes) when images are banned.</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>📜 Real Competition Rules</h2>
+            <p>When you sit down at a competition, you will usually be given a piece of paper or a PDF with a "Design Brief". It will contain strict rules. If you break them, you get <strong>Zero Points</strong> for that section.</p>
+            
+            <p><strong>The Most Common Constraints:</strong></p>
+            <ul>
+                <li>❌ <strong>No Images Allowed:</strong> No <code>&lt;img&gt;</code> tags. No background images from Google. Why? Because the judges want to test your CSS skills, not your ability to search for pictures.</li>
+                <li>❌ <strong>No External Libraries:</strong> No Bootstrap, no Tailwind, no FontAwesome. Just pure, vanilla HTML and CSS.</li>
+                <li>❌ <strong>No JavaScript:</strong> Unless it's a JS-specific competition, interactivity must be handled by CSS <code>:hover</code>, <code>:active</code>, or <code>:focus</code>.</li>
+                <li>✅ <strong>Exact Match Required:</strong> If the prompt says "A dark blue background", do not use light blue because you think it looks better. Follow the instructions exactly.</li>
+            </ul>
+
+            <div class="demo-panel">
+                <h4 style="text-align: center; margin-bottom: 1rem; color: var(--text-main);">Demo: The Image Constraint</h4>
+                <p style="text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Click the buttons to see how a competitor solves the "No Image" rule.</p>
+                
+                <div class="demo-controls">
+                    <button class="btn" onclick="toggleConstraintDemo('fail')">❌ What Beginners Do</button>
+                    <button class="btn active" onclick="toggleConstraintDemo('pass')">✅ What Champions Do</button>
+                </div>
+
+                <div id="constraint-area" class="constraint-demo-area">
+                    <div class="cd-card">
+                        <div id="cd-visual" class="cd-css-icon">🚀</div>
+                        <h4 style="color: #0f172a; margin: 0;">Space App</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>🧠 The Method: Think Before You Code</h2>
+            <p>When the timer starts, beginners immediately start typing <code>&lt;html&gt;</code>. Champions spend the first 3 minutes planning. We use the 4-step method:</p>
+
+            <div class="diagram-box">
+                <div class="flow-diagram">
+                    <div class="flow-box">1. READ<br><span style="font-size:0.8rem; font-weight:normal; color:#94a3b8;">Read the prompt twice.</span></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">2. BREAK<br><span style="font-size:0.8rem; font-weight:normal; color:#94a3b8;">Highlight keywords.</span></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">3. PLAN<br><span style="font-size:0.8rem; font-weight:normal; color:#94a3b8;">Sketch the Flexbox.</span></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">4. BUILD<br><span style="font-size:0.8rem; font-weight:normal; color:#94a3b8;">Write the code.</span></div>
+                </div>
+            </div>
+
+            <p>Let's practice Step 2: <strong>Breaking down the requirements.</strong></p>
+
+            <div class="demo-panel">
+                <h4 style="margin-bottom: 1rem;">Interactive Requirement Analyzer</h4>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; text-align: center;">Click the highlighted words in the prompt below to see how a developer breaks it down.</p>
+                
+                <div class="req-analyzer">
+                    "Design a <span class="req-word hl-layout" onclick="alert('LAYOUT: This tells us we need a Flexbox container with justify-content: space-between or gap.')">3-column layout</span> displaying user profiles. Each profile must be a <span class="req-word hl-comp" onclick="alert('COMPONENT: We need a .card div with padding, background color, and border-radius.')">card</span> containing a <span class="req-word hl-comp" onclick="alert('COMPONENT: We must use a Unicode character or a CSS shape (border-radius: 50%) since images are banned.')">circular avatar</span>, a name, and a <span class="req-word hl-comp" onclick="alert('COMPONENT: An anchor <a> tag styled to look like a button.')">'Follow' button</span>. You must <span class="req-word hl-rule" onclick="alert('RULE/CONSTRAINT: Strict warning! Do not use <img> tags.')">NOT use images</span>. The cards must have a <span class="req-word hl-layout" onclick="alert('LAYOUT/STYLE: We need to use box-shadow and transition on the .card:hover state.')">hover effect that lifts them up</span>."
+                </div>
+
+                <div class="req-legend">
+                    <div class="legend-item"><div class="legend-color lc-blue"></div> Layout / Style</div>
+                    <div class="legend-item"><div class="legend-color lc-pink"></div> UI Component</div>
+                    <div class="legend-item"><div class="legend-color lc-orange"></div> Strict Rule</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>🛠️ Clever Workarounds (Code Examples)</h2>
+            <p>Since we can't use images or external icon libraries, we have to fake it using HTML and CSS.</p>
+
+            <h3>Example 1: Using Unicode as Icons</h3>
+            <p>Unicode characters are just text, so they are perfectly legal in "No Image" competitions. You can size them and color them just like normal fonts!</p>
+            
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="mac-dot dot-red"></div><div class="mac-dot dot-yellow"></div><div class="mac-dot dot-green"></div></div>
+                    <span class="code-tab">HTML & CSS</span>
+                    <button class="btn-copy" onclick="copyCode('code-unicode', this)">Copy Code</button>
+                </div>
+<pre id="code-unicode"><code><span class="sy-cmt">&lt;!-- HTML --&gt;</span>
+<span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"icon"</span><span class="sy-tag">&gt;</span>&amp;#9889;<span class="sy-tag">&lt;/div&gt;</span> <span class="sy-cmt">&lt;!-- Lightning Bolt Unicode --&gt;</span>
+
+<span class="sy-cmt">/* CSS */</span>
+<span class="sy-sel">.icon</span> {
+  <span class="sy-prop">font-size</span>: <span class="sy-num">48px</span>;      <span class="sy-cmt">/* Makes the icon huge */</span>
+  <span class="sy-prop">color</span>: <span class="sy-val">#f59e0b</span>;       <span class="sy-cmt">/* Colors the icon yellow */</span>
+  <span class="sy-prop">text-align</span>: <span class="sy-val">center</span>;
+}</code></pre>
+            </div>
+
+            <h3>Example 2: Faking an Avatar Image with CSS</h3>
+            <p>If the prompt asks for a "user profile avatar" but bans images, you build a colored circle with the user's initials inside.</p>
+            
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="mac-dot dot-red"></div><div class="mac-dot dot-yellow"></div><div class="mac-dot dot-green"></div></div>
+                    <span class="code-tab">HTML & CSS</span>
+                    <button class="btn-copy" onclick="copyCode('code-avatar', this)">Copy Code</button>
+                </div>
+<pre id="code-avatar"><code><span class="sy-cmt">&lt;!-- HTML --&gt;</span>
+<span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"avatar"</span><span class="sy-tag">&gt;</span>JD<span class="sy-tag">&lt;/div&gt;</span> <span class="sy-cmt">&lt;!-- Initials for John Doe --&gt;</span>
+
+<span class="sy-cmt">/* CSS */</span>
+<span class="sy-sel">.avatar</span> {
+  <span class="sy-prop">width</span>: <span class="sy-num">80px</span>;
+  <span class="sy-prop">height</span>: <span class="sy-num">80px</span>;
+  <span class="sy-prop">border-radius</span>: <span class="sy-val">50%</span>; <span class="sy-cmt">/* Makes it a perfect circle */</span>
+  <span class="sy-prop">background</span>: <span class="sy-val">linear-gradient(135deg, #3b82f6, #06b6d4)</span>;
+  
+  <span class="sy-cmt">/* Center the initials perfectly inside the circle */</span>
+  <span class="sy-prop">display</span>: <span class="sy-val">flex</span>;
+  <span class="sy-prop">justify-content</span>: <span class="sy-val">center</span>;
+  <span class="sy-prop">align-items</span>: <span class="sy-val">center</span>;
+  <span class="sy-prop">color</span>: <span class="sy-val">white</span>;
+  <span class="sy-prop">font-weight</span>: <span class="sy-val">bold</span>;
+}</code></pre>
+            </div>
+            
+            <button class="collapsible-btn" onclick="toggleElement('explain-flex-center', this)">Why use Flexbox inside a tiny avatar?</button>
+            <div id="explain-flex-center" class="collapsible-content">
+                <p>Flexbox isn't just for big page layouts! Using <code>display: flex; justify-content: center; align-items: center;</code> on a small container (like an 80x80px circle) is the absolute easiest, most reliable way to perfectly dead-center text or an icon inside a shape. No messy padding or line-height math required!</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>🏋️‍♂️ Training Drills</h2>
+            <p>Open your code editor. Read the requirements carefully and build exactly what is asked.</p>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 1 (Easy): The Fake Image</h4>
+                <p><strong>Prompt:</strong> "Create a square product thumbnail (150x150px). Do not use images. The thumbnail should have a dark gray background and display the Unicode character for a camera (📷) in the center."</p>
+                <button class="btn-hint" onclick="toggleElement('hint1', this)">💡 Show Hint</button>
+                <div id="hint1" class="hint-content">
+                    Create a <code>div</code>. Give it width/height 150px, <code>background: #333;</code>. Put <code>&amp;#128247;</code> inside. Use Flexbox to center it, and make the <code>font-size</code> large (e.g., 50px).
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 2 (Medium): Plan the Layout</h4>
+                <p><strong>Prompt:</strong> "Design a navbar with a logo on the far left, and three links on the far right."<br><em>Task: Don't code it. Just write down the 3 CSS properties you need to apply to the parent container to achieve this layout.</em></p>
+                <button class="btn-hint" onclick="toggleElement('hint2', this)">💡 Show Hint</button>
+                <div id="hint2" class="hint-content">
+                    1. <code>display: flex;</code><br>
+                    2. <code>justify-content: space-between;</code><br>
+                    3. <code>align-items: center;</code>
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 3 (Hard): Strict Constraints</h4>
+                <p><strong>Prompt:</strong> "Create a button. When hovered, the background color must invert, and the button must grow by exactly 10%. Smooth the transition to half a second."</p>
+                <button class="btn-hint" onclick="toggleElement('hint3', this)">💡 Show Hint</button>
+                <div id="hint3" class="hint-content">
+                    Base button needs: <code>transition: all 0.5s ease;</code><br>
+                    Hover state needs: <code>transform: scale(1.1);</code> and swap the background/text colors.
+                </div>
+            </div>
+        </section>
+
+        <section class="card challenge-box">
+            <h2 style="color: var(--accent-orange); border-bottom-color: rgba(249, 115, 22, 0.3);">🔥 Competition Task: "No-Image" Sports Cards</h2>
+            <p>This is a simulated competition task. Read the requirements carefully. Missing a requirement means losing points.</p>
+            
+            <p><strong>Brief:</strong> "Build a Sports Card Section displaying 3 sports."</p>
+            
+            <p><strong>Strict Requirements:</strong></p>
+            <ol>
+                <li><strong>Layout:</strong> Must be a single row of 3 cards using Flexbox.</li>
+                <li><strong>Constraints:</strong> NO IMAGES ALLOWED. NO EXTERNAL FONTS OR ICONS ALLOWED.</li>
+                <li><strong>Cards:</strong> Must be for Golf, Baseball, and Football.</li>
+                <li><strong>Card Content:</strong> Every card MUST contain:
+                    <ul>
+                        <li>A circular avatar at the top containing a Unicode icon representing the sport.</li>
+                        <li>A Title (e.g., "Golf").</li>
+                        <li>A short description paragraph.</li>
+                        <li>A "Read More" button.</li>
+                    </ul>
+                </li>
+                <li><strong>Styling:</strong> The cards must have rounded corners and a box-shadow.</li>
+            </ol>
+            
+            <button class="btn-comp" onclick="toggleElement('challenge-answer', this)" style="margin-top: 1rem;">View Reference Solution Structure</button>
+            
+            <div id="challenge-answer" class="collapsible-content" style="border-left-color: var(--accent-orange); background: #020617;">
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Check your structure against this. Did you use Flexbox to center the icon inside the avatar circle?</p>
+<pre style="background: transparent; padding: 0;"><code><span class="sy-cmt">&lt;!-- Structure for ONE of the cards --&gt;</span>
+<span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"card-container"</span><span class="sy-tag">&gt;</span> <span class="sy-cmt">&lt;!-- Parent Flexbox --&gt;</span>
+
+  <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"sport-card"</span><span class="sy-tag">&gt;</span>
+    <span class="sy-cmt">&lt;!-- Fake Image (Circle with Flexbox centering) --&gt;</span>
+    <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"avatar"</span><span class="sy-tag">&gt;</span>&amp;#9917;<span class="sy-tag">&lt;/div&gt;</span> <span class="sy-cmt">&lt;!-- Golf Unicode --&gt;</span>
+    
+    <span class="sy-tag">&lt;h3&gt;</span>Golf<span class="sy-tag">&lt;/h3&gt;</span>
+    <span class="sy-tag">&lt;p&gt;</span>Master the green.<span class="sy-tag">&lt;/p&gt;</span>
+    <span class="sy-tag">&lt;button</span> <span class="sy-attr">class</span>=<span class="sy-val">"btn"</span><span class="sy-tag">&gt;</span>Read More<span class="sy-tag">&lt;/button&gt;</span>
+  <span class="sy-tag">&lt;/div&gt;</span>
+  
+  <span class="sy-cmt">&lt;!-- ... other 2 cards ... --&gt;</span>
+<span class="sy-tag">&lt;/div&gt;</span></code></pre>
+            </div>
+        </section>
+
+        <section class="card" style="border-left: 4px solid var(--accent-cyan); background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), transparent);">
+            <h2 style="color: var(--accent-cyan); border-bottom-color: rgba(6, 182, 212, 0.2);">🏠 Homework: Deconstruct a Design</h2>
+            <p>Go to a website you use often (like YouTube, Netflix, or a gaming site).</p>
+            <ul>
+                <li>Pick one UI element (like a video thumbnail card or a user profile banner).</li>
+                <li>Try to rebuild it in your code editor using <strong>ONLY HTML and CSS</strong>.</li>
+                <li>If the element has an image, replace it with a colored <code>div</code> or a Unicode icon.</li>
+                <li>Focus on getting the padding, margins, and flexbox layout exactly right.</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>📝 Session Summary</h2>
+            <ul>
+                <li><strong>Constraints are the game:</strong> Competitions restrict tools (like images or JS) to test your raw HTML/CSS logic.</li>
+                <li><strong>Read → Break → Plan → Build:</strong> Never start coding immediately. Spend 3 minutes highlighting requirements and sketching the flexbox layout.</li>
+                <li><strong>Fake it with CSS:</strong> Use Unicode characters (<code>&amp;#128640;</code>), <code>border-radius: 50%</code> for circles, and gradients to simulate graphics when images are banned.</li>
+                <li><strong>Micro-Flexbox:</strong> Flexbox isn't just for big layouts. Using <code>display: flex; justify-content: center; align-items: center;</code> is the ultimate hack for perfectly centering an icon inside a small circle or button.</li>
+            </ul>
+        </section>
+
+        <div class="session-nav">
+            <a href="session3.html" class="nav-btn">⬅ Previous Session</a>
+            <a href="session5.html" class="nav-btn">Next Session ➡</a>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="logo-container">
+            <img src="../logo.png" alt="TechTicket Logo" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'250\' height=\'50\'><text x=\'0\' y=\'40\' font-family=\'Arial\' font-size=\'32\' font-weight=\'bold\' fill=\'%2306b6d4\'><tspan fill=\'%23f8fafc\'&gt;Tech&lt;/tspan&gt;Ticket</text></svg>'">
+        </div>
+        <p>© TechTicket Academy — Educational material for TechTicket students only. Redistribution is not allowed.</p>
+    </footer>
+
+    <script>
+        // 1. Copy Code Functionality
+        function copyCode(elementId, btn) {
+            const codeEl = document.getElementById(elementId);
+            const text = codeEl.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = "Copied! ✓";
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // 2. Toggle Elements (Hints & Expandables)
+        function toggleElement(id, btn) {
+            const el = document.getElementById(id);
+            if (el.style.display === "block") {
+                el.style.display = "none";
+                if(btn && btn.classList.contains('collapsible-btn')) btn.classList.remove('active');
+            } else {
+                el.style.display = "block";
+                if(btn && btn.classList.contains('collapsible-btn')) btn.classList.add('active');
+            }
+        }
+
+        // 3. Constraint Demo Logic
+        function toggleConstraintDemo(type) {
+            const btns = document.querySelectorAll('.demo-controls .btn');
+            btns.forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const visual = document.getElementById('cd-visual');
+            
+            if(type === 'fail') {
+                // Beginner logic: using an ugly placeholder or broken image
+                visual.className = 'cd-img-placeholder';
+                visual.innerHTML = 'BROKEN<br>IMAGE<br>LINK';
+                visual.style.background = '#cbd5e1';
+            } else {
+                // Champion logic: Using CSS circle + Unicode
+                visual.className = 'cd-css-icon';
+                visual.innerHTML = '🚀';
+                visual.style.background = 'linear-gradient(135deg, #3b82f6, #06b6d4)';
+            }
+        }
+    </script>
+</body>
+</html>
