@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechTicket | Code Challenge Championship Training</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           CSS VARIABLES & THEME
+           ========================================================================== */
+        :root {
+            /* Colors - Dark Competition Theme */
+            --bg-body: #060b14;
+            --bg-card: #0f172a;
+            --bg-card-hover: #1e293b;
+            --bg-code: #020617;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-yellow: #f59e0b;
+            --accent-green: #10b981;
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            --gradient-comp: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            
+            /* Typography */
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --font-code: 'Fira Code', monospace;
+            
+            /* UI Elements */
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --shadow-glow: 0 0 20px rgba(139, 92, 246, 0.4);
+            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ==========================================================================
+           GLOBAL RESETS
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        /* Background Grid Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(51, 65, 85, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(51, 65, 85, 0.15) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           TYPOGRAPHY
+           ========================================================================== */
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        h1 { font-size: 2.5rem; font-weight: 800; text-align: center; }
+        
+        h2 { 
+            font-size: 1.8rem; 
+            font-weight: 700;
+            color: var(--accent-cyan);
+            border-bottom: 2px solid var(--border-color, #334155);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h3 { font-size: 1.4rem; color: var(--accent-purple); margin-top: 1.5rem; }
+        h4 { font-size: 1.1rem; color: var(--accent-blue); }
+
+        p { margin-bottom: 1.2rem; }
+        ul, ol { margin-left: 1.5rem; margin-bottom: 1.2rem; }
+        li { margin-bottom: 0.5rem; }
+
+        strong { color: var(--accent-cyan); font-weight: 600; }
+        em { color: var(--accent-pink); font-style: normal; font-weight: 600; }
+
+        code:not(pre code) {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent-purple);
+            padding: 0.2em 0.4em;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9em;
+        }
+
+        /* ==========================================================================
+           LAYOUT
+           ========================================================================== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(180deg, #0f172a 0%, var(--bg-body) 100%);
+            padding: 3rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color, #334155);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .championship-badge {
+            display: inline-block;
+            background: var(--gradient-comp);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 4px 25px rgba(236, 72, 153, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4); }
+        }
+
+        .logo-container img {
+            max-height: 50px;
+            margin-bottom: 1rem;
+        }
+
+        .program-title {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cards (Sections) */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--border-color, #334155);
+            box-shadow: var(--shadow-card);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0.5;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #475569;
+            box-shadow: var(--shadow-glow);
+        }
+        .card:hover::before { opacity: 1; }
+
+        .card.comp-card::before { background: var(--gradient-comp); opacity: 0.8; }
+        .card.comp-card { border-color: rgba(139, 92, 246, 0.3); }
+
+        /* ==========================================================================
+           CODE BLOCKS (VS Code Style)
+           ========================================================================== */
+        .code-window {
+            background-color: var(--bg-code);
+            border-radius: var(--radius-md);
+            border: 1px solid #334155;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .code-header {
+            background-color: #0f172a;
+            padding: 0.6rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .mac-dots { display: flex; gap: 6px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background-color: #ef4444; }
+        .dot-yellow { background-color: #f59e0b; }
+        .dot-green { background-color: #10b981; }
+
+        .code-tab {
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .btn-copy {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--text-muted);
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-copy:hover {
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .btn-copy.copied {
+            background: var(--accent-green);
+            color: #fff;
+            border-color: var(--accent-green);
+        }
+
+        pre { padding: 1.5rem; overflow-x: auto; margin: 0; }
+        pre code {
+            font-family: var(--font-code);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        /* Syntax Highlighting */
+        .sy-tag { color: #f472b6; } /* Pink */
+        .sy-attr { color: #fbbf24; } /* Yellow */
+        .sy-val { color: #34d399; } /* Green */
+        .sy-sel { color: #60a5fa; } /* Blue */
+        .sy-prop { color: #38bdf8; } /* Cyan */
+        .sy-num { color: #c084fc; } /* Purple */
+        .sy-cmt { color: #64748b; font-style: italic; } /* Gray */
+
+        /* ==========================================================================
+           VISUAL DIAGRAMS & DEMOS
+           ========================================================================== */
+        .demo-panel {
+            background-color: var(--bg-code);
+            border: 1px dashed #475569;
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            overflow: hidden;
+        }
+
+        .demo-stage {
+            background-image: 
+                linear-gradient(#1e293b 1px, transparent 1px),
+                linear-gradient(90deg, #1e293b 1px, transparent 1px);
+            background-size: 20px 20px;
+            width: 100%;
+            min-height: 200px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 2rem;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--accent-blue);
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-sans);
+        }
+
+        .btn:hover, .btn.active {
+            background: var(--accent-blue);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-comp {
+            background: var(--gradient-comp);
+            border: none;
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+        .btn-comp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.5);
+        }
+
+        /* ==========================================================================
+           INTERACTIVE FEATURES (Hints & Expandables)
+           ========================================================================== */
+        .collapsible-btn {
+            background: transparent;
+            color: var(--accent-purple);
+            border: none;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 0;
+            font-family: var(--font-sans);
+            width: 100%;
+            text-align: left;
+            margin-top: 1rem;
+        }
+        .collapsible-btn::before { content: '▶'; font-size: 0.8em; transition: transform 0.2s; }
+        .collapsible-btn.active::before { transform: rotate(90deg); }
+
+        .collapsible-content {
+            display: none;
+            padding: 1.5rem;
+            background-color: rgba(15, 23, 42, 0.8);
+            border-left: 2px solid var(--accent-purple);
+            border-radius: 0 0 8px 8px;
+            margin-top: 0.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Exercise Boxes */
+        .exercise-box {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-left: 4px solid var(--accent-blue);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .challenge-box {
+            background: rgba(236, 72, 153, 0.05);
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            border-left: 4px solid var(--accent-pink);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .btn-hint {
+            background: transparent;
+            color: var(--accent-yellow);
+            border: 1px solid var(--accent-yellow);
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        .btn-hint:hover { background: var(--accent-yellow); color: #000; }
+
+        .hint-content {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(245, 158, 11, 0.05);
+            border-left: 2px solid var(--accent-yellow);
+            border-radius: 0 4px 4px 0;
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================================
+           COMPETITION SHAPE CLASSES (For Visual Explanations)
+           ========================================================================== */
+        .shape-square {
+            width: 100px; height: 100px;
+            background: var(--accent-blue);
+            transition: var(--transition);
+        }
+        .shape-circle {
+            width: 100px; height: 100px;
+            background: var(--accent-pink);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+        .shape-triangle {
+            width: 0; height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 100px solid var(--accent-green);
+            background: transparent;
+            transition: var(--transition);
+        }
+        
+        .layered-demo {
+            position: relative;
+            width: 150px; height: 150px;
+        }
+        .layer-base {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+        }
+        .layer-top {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%; height: 60%;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+
+        /* ==========================================================================
+           NAVIGATION & FOOTER
+           ========================================================================== */
+        .session-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color, #334155);
+        }
+
+        .nav-btn {
+            background: var(--bg-card);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            border: 1px solid var(--border-color, #334155);
+            transition: var(--transition);
+            text-align: center;
+            flex: 1;
+            margin: 0 0.5rem;
+        }
+        .nav-btn:hover { background: var(--accent-purple); color: #fff; border-color: var(--accent-purple); }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            margin-top: 4rem;
+            background: #020617;
+            border-top: 1px solid var(--border-color, #334155);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ==========================================================================
+           RESPONSIVE DESIGN
+           ========================================================================== */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .card { padding: 1.5rem; }
+            h1 { font-size: 2rem; }
+            .session-nav { flex-direction: column; gap: 1rem; }
+            .nav-btn { margin: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-pattern"></div>
+
+    <header>
+        <span class="championship-badge"><i class="fas fa-trophy"></i> Championship Training</span>
+        <div class="logo-container">
+            <img src="../logo.png" alt="TechTicket Logo" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'250\' height=\'50\'><text x=\'0\' y=\'40\' font-family=\'Arial\' font-size=\'32\' font-weight=\'bold\' fill=\'%2306b6d4\'><tspan fill=\'%23f8fafc\'&gt;Tech&lt;/tspan&gt;Ticket</text></svg>'">
+        </div>
+        <div class="program-title">Code Challenge Web Track</div>
+        <h1>Session 1 — CSS Creative Shapes & Icon Design</h1>
+    </header>
+
+    <main class="container">
+
+        <section class="card comp-card">
+            <h2>🎯 Session Overview</h2>
+            <p>Welcome to Championship Training! In normal web development, if you need an icon or a graphic, you just download an image file (PNG, SVG) and put it on the page.</p>
+            <p><strong>In Coding Competitions, that is cheating.</strong></p>
+            <p>Today, you will learn how to "fake" graphics. You will build complex visual designs, icons, and illustrations using <em>only</em> HTML boxes and CSS code.</p>
+            <p>You will learn:</p>
+            <ul>
+                <li>How to manipulate the Box Model to draw Circles and Triangles.</li>
+                <li>How to use <strong>Gradients</strong> to make flat shapes look 3D.</li>
+                <li>How to use <strong>Positioning</strong> (Absolute/Relative) to stack shapes on top of each other.</li>
+                <li>How to use <strong>Box-Shadows</strong> to create depth.</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>🏆 The Competition Rules</h2>
+            <p>If you enter a CSS Art or Web Design challenge, you must follow the strict rules of the platform:</p>
+            <ul>
+                <li>❌ <strong>NO Images allowed</strong> (No <code>&lt;img src="..."&gt;</code>).</li>
+                <li>❌ <strong>NO JavaScript allowed</strong> for drawing.</li>
+                <li>✅ <strong>EVERYTHING</strong> must be drawn using HTML <code>&lt;div&gt;</code> tags and styled with CSS.</li>
+            </ul>
+            <p>To win, you must think like an artist, but paint with code. Let's start with the basic geometric shapes.</p>
+        </section>
+
+        <section class="card">
+            <h2>📐 Drawing Basic Shapes</h2>
+            <p>Every shape begins as a standard HTML <code>&lt;div&gt;</code>, which is a perfect square or rectangle. We use CSS to carve that block into different shapes.</p>
+
+            <h3>1. The Perfect Circle</h3>
+            <p>To turn a square into a circle, we use the <code>border-radius</code> property. If we set it to <code>50%</code>, the corners curve so much they meet in the middle!</p>
+            
+            <div class="demo-panel">
+                <div class="shape-circle"></div>
+            </div>
+
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div>
+                    <span class="code-tab">HTML & CSS</span>
+                    <button class="btn-copy" onclick="copyCode('code-circle', this)">Copy Code</button>
+                </div>
+<pre id="code-circle"><code><span class="sy-cmt">&lt;!-- HTML --&gt;</span>
+<span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"circle"</span><span class="sy-tag">&gt;&lt;/div&gt;</span>
+
+<span class="sy-cmt">/* CSS */</span>
+<span class="sy-sel">.circle</span> {
+  <span class="sy-prop">width</span>: <span class="sy-num">100px</span>;
+  <span class="sy-prop">height</span>: <span class="sy-num">100px</span>;
+  <span class="sy-prop">background-color</span>: <span class="sy-val">#ec4899</span>;
+  <span class="sy-prop">border-radius</span>: <span class="sy-val">50%</span>; <span class="sy-cmt">/* The magic line! */</span>
+}</code></pre>
+            </div>
+
+            <h3>2. The CSS Triangle Trick</h3>
+            <p>How do we draw a triangle if a <code>div</code> only has 4 straight sides? We use a famous CSS hack involving <strong>thick, transparent borders</strong>.</p>
+            
+            <div class="demo-panel">
+                <div class="shape-triangle"></div>
+            </div>
+
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="mac-dot dot-red"></div><div class="mac-dot dot-yellow"></div><div class="mac-dot dot-green"></div></div>
+                    <span class="code-tab">CSS</span>
+                    <button class="btn-copy" onclick="copyCode('code-triangle', this)">Copy Code</button>
+                </div>
+<pre id="code-triangle"><code><span class="sy-sel">.triangle</span> {
+  <span class="sy-cmt">/* 1. Shrink the actual box to nothing */</span>
+  <span class="sy-prop">width</span>: <span class="sy-num">0</span>;
+  <span class="sy-prop">height</span>: <span class="sy-num">0</span>;
+  <span class="sy-prop">background</span>: <span class="sy-val">transparent</span>;
+  
+  <span class="sy-cmt">/* 2. Create thick invisible borders on left and right */</span>
+  <span class="sy-prop">border-left</span>: <span class="sy-num">50px</span> <span class="sy-val">solid transparent</span>;
+  <span class="sy-prop">border-right</span>: <span class="sy-num">50px</span> <span class="sy-val">solid transparent</span>;
+  
+  <span class="sy-cmt">/* 3. Create a thick colored border on the bottom! */</span>
+  <span class="sy-prop">border-bottom</span>: <span class="sy-num">100px</span> <span class="sy-val">solid #10b981</span>;
+}</code></pre>
+            </div>
+            
+            <button class="collapsible-btn" onclick="toggleElement('explain-triangle', this)">How does the border trick actually work?</button>
+            <div id="explain-triangle" class="collapsible-content">
+                <p>When two very thick borders meet at the corner of a box, the browser cuts them at a 45-degree angle. By making the width and height of the box <code>0</code>, the borders crash into each other. If we make 3 borders invisible (transparent) and 1 border colored, that angled cut creates a perfect triangle!</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>🎨 Gradients: Faking 3D Graphics</h2>
+            <p>Flat colors are boring. To make an icon look like a real app icon, we use Gradients. A gradient smoothly blends one color into another.</p>
+
+            <div class="demo-panel" style="flex-direction: row; gap: 2rem;">
+                <div style="width: 120px; height: 120px; border-radius: 20px; background: linear-gradient(135deg, #06b6d4, #3b82f6);"></div>
+                <div style="width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ec4899, #4c1d95);"></div>
+            </div>
+
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="mac-dot dot-red"></div><div class="mac-dot dot-yellow"></div><div class="mac-dot dot-green"></div></div>
+                    <button class="btn-copy" onclick="copyCode('code-grad', this)">Copy Code</button>
+                </div>
+<pre id="code-grad"><code><span class="sy-cmt">/* Linear Gradient (Straight line) */</span>
+<span class="sy-sel">.app-icon</span> {
+  <span class="sy-prop">background</span>: <span class="sy-val">linear-gradient(135deg, cyan, blue)</span>;
+}
+
+<span class="sy-cmt">/* Radial Gradient (Starts from center like a glowing orb) */</span>
+<span class="sy-sel">.planet</span> {
+  <span class="sy-prop">background</span>: <span class="sy-val">radial-gradient(circle at 30% 30%, pink, darkpurple)</span>;
+}</code></pre>
+            </div>
+            <p><em>Pro Tip:</em> The <code>circle at 30% 30%</code> in the radial gradient creates a "fake lighting" effect by moving the bright center to the top-left corner!</p>
+        </section>
+
+        <section class="card">
+            <h2>🥞 Layering: Position Relative & Absolute</h2>
+            <p>HTML elements normally stack on top of each other down the page. To draw an icon, we need shapes to sit <em>inside</em> and <em>on top</em> of each other like a stack of pancakes.</p>
+            <p>We do this using <strong>Positioning</strong>.</p>
+            
+            <div class="demo-panel">
+                <div class="layered-demo">
+                    <div class="layer-base"></div>
+                    <div class="layer-top"></div>
+                </div>
+            </div>
+
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="mac-dot dot-red"></div><div class="mac-dot dot-yellow"></div><div class="mac-dot dot-green"></div></div>
+                    <span class="code-tab">HTML & CSS</span>
+                    <button class="btn-copy" onclick="copyCode('code-layer', this)">Copy Code</button>
+                </div>
+<pre id="code-layer"><code><span class="sy-cmt">&lt;!-- HTML: The child goes INSIDE the parent --&gt;</span>
+<span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"base-layer"</span><span class="sy-tag">&gt;</span>
+  <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"top-layer"</span><span class="sy-tag">&gt;&lt;/div&gt;</span>
+<span class="sy-tag">&lt;/div&gt;</span>
+
+<span class="sy-cmt">/* CSS */</span>
+<span class="sy-sel">.base-layer</span> {
+  <span class="sy-prop">position</span>: <span class="sy-val">relative</span>; <span class="sy-cmt">/* 1. Make parent the anchor point */</span>
+  <span class="sy-prop">width</span>: <span class="sy-num">150px</span>; <span class="sy-prop">height</span>: <span class="sy-num">150px</span>;
+}
+
+<span class="sy-sel">.top-layer</span> {
+  <span class="sy-prop">position</span>: <span class="sy-val">absolute</span>; <span class="sy-cmt">/* 2. Disconnect child from normal flow */</span>
+  <span class="sy-prop">top</span>: <span class="sy-num">50%</span>;           <span class="sy-cmt">/* 3. Push down 50% from parent top */</span>
+  <span class="sy-prop">left</span>: <span class="sy-num">50%</span>;          <span class="sy-cmt">/* 4. Push right 50% from parent left */</span>
+  <span class="sy-prop">transform</span>: <span class="sy-val">translate(-50%, -50%)</span>; <span class="sy-cmt">/* 5. Perfect dead center! */</span>
+}</code></pre>
+            </div>
+            
+            <button class="collapsible-btn" onclick="toggleElement('explain-pos', this)">Explain the Absolute Center Trick</button>
+            <div id="explain-pos" class="collapsible-content">
+                <p>If you just use <code>top: 50%; left: 50%;</code>, the <em>top-left corner</em> of the child box will be in the middle, making it look off-center.</p>
+                <p>Adding <code>transform: translate(-50%, -50%);</code> pulls the child box back by exactly half of its own width and height, snapping it into perfect, mathematical center!</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>🕹️ Interactive Demo: Icon Builder</h2>
+            <p>Click the buttons to manipulate the HTML elements inside the demo stage. Watch how CSS properties combine to create a graphic!</p>
+
+            <div class="demo-panel">
+                <div class="demo-stage">
+                    <div id="demo-base" style="width: 150px; height: 150px; background: #3b82f6; position: relative; transition: all 0.5s;">
+                        <div id="demo-child" style="width: 50px; height: 50px; background: #fff; position: absolute; top: 10px; left: 10px; transition: all 0.5s;"></div>
+                    </div>
+                </div>
+
+                <div class="demo-controls">
+                    <button class="btn" onclick="demoAction('base-round')">1. Round Base</button>
+                    <button class="btn" onclick="demoAction('base-grad')">2. Add Gradient</button>
+                    <button class="btn" onclick="demoAction('child-center')">3. Center Child</button>
+                    <button class="btn" onclick="demoAction('child-circle')">4. Round Child</button>
+                    <button class="btn" onclick="demoAction('add-shadow')">5. Add Shadow</button>
+                    <button class="btn" onclick="demoAction('reset')" style="border-color: var(--accent-pink);">Reset</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>🏋️‍♂️ Training Drills</h2>
+            <p>Open your code editor. Build these shapes. No copy-pasting allowed!</p>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 1 (Easy): The Target</h4>
+                <p>Create a red square (100x100). Inside it, place a white circle (50x50). Center the circle perfectly inside the square using Absolute Positioning.</p>
+                <button class="btn-hint" onclick="toggleElement('hint1', this)">💡 Show Hint</button>
+                <div id="hint1" class="hint-content">
+                    Parent needs: <code>position: relative;</code><br>
+                    Child needs: <code>border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);</code>
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 2 (Medium): The Glowing Badge</h4>
+                <p>Create a circle. Give it a <code>linear-gradient</code> background. Add a <code>box-shadow</code> that matches the color of the gradient so it looks like it's glowing in the dark.</p>
+                <button class="btn-hint" onclick="toggleElement('hint2', this)">💡 Show Hint</button>
+                <div id="hint2" class="hint-content">
+                    <code>box-shadow: 0 10px 20px rgba(0, 255, 255, 0.5);</code> (Change the RGBA colors to match your gradient!)
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 3 (Hard): The Envelope Icon</h4>
+                <p>Build an email envelope icon using ONE rectangle <code>div</code> (the envelope body) and ONE triangle <code>div</code> (the flap) positioned absolutely at the top.</p>
+                <button class="btn-hint" onclick="toggleElement('hint3', this)">💡 Show Hint</button>
+                <div id="hint3" class="hint-content">
+                    Look back at the CSS Triangle Trick! Make the triangle point downwards by coloring the <code>border-top</code> and making left/right transparent. Position it <code>top: 0;</code> inside the rectangle.
+                </div>
+            </div>
+        </section>
+
+        <section class="card challenge-box">
+            <h2 style="color: var(--accent-pink); border-bottom-color: rgba(236, 72, 153, 0.3);">🔥 Competition Task: Space App Icon</h2>
+            <p><strong>Brief:</strong> "Design a mobile app icon for a new Astronomy app using ONLY HTML and CSS."</p>
+            
+            <p><strong>Requirements:</strong></p>
+            <ol>
+                <li>The main icon body must be a rounded square (border-radius: 20px).</li>
+                <li>The background must be a dark space-like gradient (purple to black).</li>
+                <li>Inside, draw a Planet (a circle with a radial gradient to make it look 3D).</li>
+                <li><strong>Bonus points:</strong> Draw a moon orbiting the planet (a small white circle positioned absolutely near the edge).</li>
+            </ol>
+            
+            <button class="btn-comp" onclick="toggleElement('challenge-answer', this)" style="margin-top: 1rem;">View Reference Solution</button>
+            
+            <div id="challenge-answer" class="collapsible-content" style="border-left-color: var(--accent-pink); background: #020617;">
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Remember, there are many ways to solve a CSS art challenge!</p>
+<pre style="background: transparent; padding: 0;"><code><span class="sy-cmt">&lt;!-- HTML Structure --&gt;</span>
+<span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"app-icon"</span><span class="sy-tag">&gt;</span>
+  <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"planet"</span><span class="sy-tag">&gt;&lt;/div&gt;</span>
+  <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"moon"</span><span class="sy-tag">&gt;&lt;/div&gt;</span>
+<span class="sy-tag">&lt;/div&gt;</span>
+
+<span class="sy-cmt">/* CSS Setup */</span>
+<span class="sy-sel">.app-icon</span> {
+  <span class="sy-prop">position</span>: <span class="sy-val">relative</span>;
+  <span class="sy-prop">width</span>: <span class="sy-num">120px</span>; <span class="sy-prop">height</span>: <span class="sy-num">120px</span>;
+  <span class="sy-prop">border-radius</span>: <span class="sy-val">25px</span>;
+  <span class="sy-prop">background</span>: <span class="sy-val">linear-gradient(135deg, #1e1b4b, #000)</span>;
+  <span class="sy-prop">box-shadow</span>: <span class="sy-val">0 10px 20px rgba(0,0,0,0.5)</span>;
+}
+
+<span class="sy-sel">.planet</span> {
+  <span class="sy-prop">position</span>: <span class="sy-val">absolute</span>;
+  <span class="sy-prop">top</span>: <span class="sy-val">50%</span>; <span class="sy-prop">left</span>: <span class="sy-val">50%</span>;
+  <span class="sy-prop">transform</span>: <span class="sy-val">translate(-50%, -50%)</span>;
+  <span class="sy-prop">width</span>: <span class="sy-num">60px</span>; <span class="sy-prop">height</span>: <span class="sy-num">60px</span>;
+  <span class="sy-prop">border-radius</span>: <span class="sy-val">50%</span>;
+  <span class="sy-prop">background</span>: <span class="sy-val">radial-gradient(circle at 30% 30%, #ec4899, #8b5cf6)</span>;
+}
+
+<span class="sy-sel">.moon</span> {
+  <span class="sy-prop">position</span>: <span class="sy-val">absolute</span>;
+  <span class="sy-prop">top</span>: <span class="sy-num">20px</span>; <span class="sy-prop">right</span>: <span class="sy-num">20px</span>;
+  <span class="sy-prop">width</span>: <span class="sy-num">15px</span>; <span class="sy-prop">height</span>: <span class="sy-num">15px</span>;
+  <span class="sy-prop">background</span>: <span class="sy-val">#fff</span>;
+  <span class="sy-prop">border-radius</span>: <span class="sy-val">50%</span>;
+}</code></pre>
+            </div>
+        </section>
+
+        <section class="card" style="border-left: 4px solid var(--accent-green); background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), transparent);">
+            <h2 style="color: var(--accent-green); border-bottom-color: rgba(16, 185, 129, 0.2);">🏠 Homework: The Art Portfolio</h2>
+            <p>Your task before the next session is to design your own custom App Icon using everything we learned today.</p>
+            <ul>
+                <li>It must contain at least <strong>3 layered HTML elements</strong> (Parent, Child, Grandchild).</li>
+                <li>It must use at least one <strong>Gradient</strong>.</li>
+                <li>It must use <strong>Absolute Positioning</strong> to align the pieces.</li>
+                <li><strong>Pro-Level Bonus:</strong> Add a <code>:hover</code> state that uses <code>transform: scale(1.1);</code> so the icon pops out when you hover over it!</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>📝 Session Summary</h2>
+            <ul>
+                <li><strong>CSS Shapes:</strong> Use <code>border-radius: 50%</code> for circles, and thick transparent borders to draw triangles.</li>
+                <li><strong>Gradients:</strong> <code>linear-gradient</code> creates flat transitions, while <code>radial-gradient</code> creates glowing/3D sphere effects.</li>
+                <li><strong>Layering:</strong> Use <code>position: relative;</code> on the parent to anchor it. Use <code>position: absolute;</code> on the children to stack them on top like stickers.</li>
+                <li><strong>Absolute Center Trick:</strong> <code>top: 50%; left: 50%; transform: translate(-50%, -50%);</code></li>
+            </ul>
+        </section>
+
+        <div class="session-nav">
+            <a href="../index.html" class="nav-btn">⬅ Previous Session</a>
+            <a href="session2.html" class="nav-btn">Next Session ➡</a>
+        </div>
+
+    </main>
+
+    <footer>
+        <div style="margin-bottom: 1rem;">
+            <span style="font-weight: 800; font-size: 1.2rem; color: #fff;">Tech<span style="color: var(--accent-cyan);">Ticket</span></span>
+        </div>
+        <p>© TechTicket Academy — Educational material for TechTicket students only. Redistribution is not allowed.</p>
+    </footer>
+
+    <script>
+        // 1. Copy Code Functionality
+        function copyCode(elementId, btn) {
+            const codeEl = document.getElementById(elementId);
+            const text = codeEl.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = "Copied! ✓";
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // 2. Toggle Elements (Hints & Expandables)
+        function toggleElement(id, btn) {
+            const el = document.getElementById(id);
+            if (el.style.display === "block") {
+                el.style.display = "none";
+                if(btn.classList.contains('collapsible-btn')) btn.classList.remove('active');
+            } else {
+                el.style.display = "block";
+                if(btn.classList.contains('collapsible-btn')) btn.classList.add('active');
+            }
+        }
+
+        // 3. Interactive Icon Builder Logic
+        function demoAction(action) {
+            const base = document.getElementById('demo-base');
+            const child = document.getElementById('demo-child');
+
+            switch(action) {
+                case 'base-round':
+                    base.style.borderRadius = '30px';
+                    break;
+                case 'base-grad':
+                    base.style.background = 'linear-gradient(135deg, #8b5cf6, #ec4899)';
+                    break;
+                case 'child-center':
+                    child.style.top = '50%';
+                    child.style.left = '50%';
+                    child.style.transform = 'translate(-50%, -50%)';
+                    break;
+                case 'child-circle':
+                    child.style.borderRadius = '50%';
+                    child.style.width = '70px';
+                    child.style.height = '70px';
+                    break;
+                case 'add-shadow':
+                    base.style.boxShadow = '0 15px 25px rgba(236, 72, 153, 0.5)';
+                    base.style.transform = 'translateY(-10px)';
+                    break;
+                case 'reset':
+                    base.style.borderRadius = '0px';
+                    base.style.background = '#3b82f6';
+                    base.style.boxShadow = 'none';
+                    base.style.transform = 'none';
+                    
+                    child.style.top = '10px';
+                    child.style.left = '10px';
+                    child.style.transform = 'none';
+                    child.style.borderRadius = '0px';
+                    child.style.width = '50px';
+                    child.style.height = '50px';
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
