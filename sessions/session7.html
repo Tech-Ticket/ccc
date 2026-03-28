@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechTicket | Code Challenge Championship Training</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           CSS VARIABLES & THEME (Dark Competition / Gold Theme)
+           ========================================================================== */
+        :root {
+            /* Backgrounds */
+            --bg-main: #060b14;
+            --bg-card: #0f172a;
+            --bg-card-hover: #1e293b;
+            --bg-code: #020617;
+            
+            /* Text */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            /* Accents - Competition Gold Theme */
+            --accent-gold: #fbbf24;
+            --accent-yellow: #f59e0b;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
+            --gradient-comp: linear-gradient(135deg, var(--accent-orange), var(--accent-red));
+            
+            /* Borders & Shadows */
+            --border-color: #334155;
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-glow: 0 0 20px rgba(251, 191, 36, 0.3);
+            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            
+            /* Typography & Animation */
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --font-code: 'Fira Code', monospace;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ==========================================================================
+           GLOBAL RESETS
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        /* Hexagon Background Pattern for Competition Vibe */
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                radial-gradient(rgba(251, 191, 36, 0.05) 2px, transparent 2px),
+                radial-gradient(rgba(251, 191, 36, 0.05) 2px, transparent 2px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           TYPOGRAPHY
+           ========================================================================== */
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        h1 { font-size: 2.5rem; font-weight: 900; text-align: center; letter-spacing: -1px; text-transform: uppercase; }
+        
+        h2 { 
+            font-size: 1.8rem; 
+            font-weight: 800;
+            color: var(--accent-gold);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        h3 { font-size: 1.4rem; color: var(--text-main); margin-top: 1.5rem; }
+        h4 { font-size: 1.1rem; color: var(--accent-orange); text-transform: uppercase; letter-spacing: 1px; }
+
+        p { margin-bottom: 1.2rem; }
+        ul, ol { margin-left: 1.5rem; margin-bottom: 1.2rem; }
+        li { margin-bottom: 0.5rem; }
+
+        strong { color: var(--accent-gold); font-weight: 700; }
+        em { color: var(--accent-orange); font-style: normal; font-weight: 700; }
+
+        code:not(pre code) {
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--accent-gold);
+            padding: 0.2em 0.4em;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9em;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        /* ==========================================================================
+           LAYOUT
+           ========================================================================== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(180deg, #18110b 0%, var(--bg-main) 100%);
+            padding: 3rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .championship-badge {
+            display: inline-block;
+            background: var(--gradient-primary);
+            color: #020617;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+            border: 2px solid #fff;
+        }
+
+        .logo-container img {
+            max-height: 60px;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.2));
+        }
+
+        .program-title {
+            color: var(--accent-gold);
+            font-size: 0.9rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cards (Sections) */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0.5;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #475569;
+            box-shadow: var(--shadow-glow);
+        }
+        .card:hover::before { opacity: 1; }
+
+        .card.danger-card::before { background: var(--gradient-comp); opacity: 1; width: 6px; }
+        .card.danger-card { border-color: rgba(249, 115, 22, 0.5); box-shadow: 0 10px 30px rgba(249, 115, 22, 0.1); }
+        
+        .card.focus-card {
+            background: linear-gradient(180deg, #17110b 0%, var(--bg-card) 100%);
+            border: 2px solid var(--accent-gold);
+        }
+
+        /* ==========================================================================
+           TIMER SECTION (CRITICAL COMPONENT)
+           ========================================================================== */
+        .timer-dashboard {
+            background: #020617;
+            border: 2px solid var(--accent-gold);
+            border-radius: var(--radius-lg);
+            padding: 3rem 2rem;
+            text-align: center;
+            width: 100%;
+            box-shadow: inset 0 0 50px rgba(251, 191, 36, 0.05), 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timer-dashboard::after {
+            content: 'SIMULATION ACTIVE';
+            position: absolute;
+            top: 10px; right: -40px;
+            background: var(--accent-red);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 900;
+            padding: 5px 40px;
+            transform: rotate(45deg);
+            letter-spacing: 2px;
+        }
+
+        .timer-display {
+            font-family: var(--font-code);
+            font-size: 6rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+            margin: 1rem 0 2rem 0;
+            line-height: 1;
+            letter-spacing: 4px;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .timer-display.running {
+            animation: timer-pulse 2s infinite;
+        }
+
+        .timer-display.warning {
+            color: var(--accent-orange);
+            text-shadow: 0 0 20px rgba(249, 115, 22, 0.6);
+            animation: timer-pulse-fast 1s infinite;
+        }
+
+        .timer-display.danger {
+            color: var(--accent-red);
+            text-shadow: 0 0 30px rgba(239, 68, 68, 0.8);
+            animation: timer-pulse-panic 0.5s infinite;
+        }
+        
+        @keyframes timer-pulse {
+            0% { opacity: 1; } 50% { opacity: 0.85; } 100% { opacity: 1; }
+        }
+        @keyframes timer-pulse-fast {
+            0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); }
+        }
+        @keyframes timer-pulse-panic {
+            0% { transform: translateX(0); } 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } 100% { transform: translateX(0); }
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ==========================================================================
+           INTERACTIVE BUTTONS
+           ========================================================================== */
+        .btn {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            border: 2px solid var(--border-color);
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-sans);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover:not(:disabled) {
+            background-color: var(--bg-card-hover);
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+            color: #020617;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: var(--gradient-primary);
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.6);
+        }
+
+        .btn-danger {
+            background: var(--bg-code);
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: var(--accent-red);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.5);
+        }
+
+        /* ==========================================================================
+           CHECKLIST & SCORING UI
+           ========================================================================== */
+        .checklist {
+            background: #020617;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .check-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .check-box {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--accent-gold);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .check-box.checked {
+            background: var(--accent-gold);
+        }
+
+        .check-box.checked::after {
+            content: '✓';
+            color: #020617;
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        .check-text h4 { margin-bottom: 0.2rem; color: var(--text-main); }
+        .check-text p { margin-bottom: 0; font-size: 0.9rem; color: var(--text-muted); }
+
+        /* Scoring System Display */
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 1.5rem;
+        }
+
+        .score-card {
+            background: var(--bg-code);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .score-val {
+            font-size: 2rem;
+            font-weight: 900;
+            font-family: var(--font-code);
+            color: var(--accent-gold);
+        }
+
+        .score-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* ==========================================================================
+           CODE BLOCKS & COLLAPSIBLES (For Review Section)
+           ========================================================================== */
+        .code-window {
+            background-color: var(--bg-code);
+            border-radius: var(--radius-md);
+            border: 1px solid #334155;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .code-header {
+            background-color: #0f172a;
+            padding: 0.6rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .mac-dots { display: flex; gap: 6px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background-color: #ef4444; }
+        .dot-yellow { background-color: #f59e0b; }
+        .dot-green { background-color: #10b981; }
+
+        .btn-copy {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--text-muted);
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-copy:hover { color: var(--accent-gold); border-color: var(--accent-gold); }
+        .btn-copy.copied { background: var(--accent-green); color: #020617; border-color: var(--accent-green); }
+
+        pre { padding: 1.5rem; overflow-x: auto; margin: 0; }
+        pre code { font-family: var(--font-code); font-size: 0.95rem; line-height: 1.5; color: #e2e8f0; }
+
+        /* Syntax Highlighting */
+        .sy-tag { color: #f472b6; }
+        .sy-attr { color: #fbbf24; }
+        .sy-val { color: #34d399; }
+        .sy-sel { color: #60a5fa; }
+        .sy-prop { color: #38bdf8; }
+        .sy-cmt { color: #64748b; font-style: italic; }
+
+        /* Expandable Sections */
+        .collapsible-btn {
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 1rem 1.5rem;
+            font-family: var(--font-sans);
+            width: 100%;
+            text-align: left;
+            margin-top: 1.5rem;
+            border-radius: var(--radius-md);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+        .collapsible-btn:hover { background: rgba(251, 191, 36, 0.2); }
+        .collapsible-btn::before { content: '▼'; font-size: 0.8em; transition: transform 0.2s; }
+        .collapsible-btn.active::before { transform: rotate(-180deg); }
+
+        .collapsible-content {
+            display: none;
+            padding: 2rem 1.5rem;
+            background-color: var(--bg-code);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+            margin-top: -5px; /* Pull up to attach to button */
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Hints (Hidden by default, styled to discourage use) */
+        .btn-hint {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px dashed var(--border-color);
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        .btn-hint:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+        .hint-content { display: none; margin-top: 1rem; padding: 1rem; background: var(--bg-code); border-left: 2px solid var(--accent-gold); font-family: var(--font-code); font-size: 0.9rem; }
+
+        /* ==========================================================================
+           NAVIGATION & FOOTER
+           ========================================================================== */
+        .session-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-btn {
+            background: var(--bg-card);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-md);
+            font-weight: 800;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            text-align: center;
+            flex: 1;
+            margin: 0 0.5rem;
+            text-transform: uppercase;
+        }
+        .nav-btn:hover { background: var(--accent-gold); color: #020617; border-color: var(--accent-gold); }
+
+        footer {
+            text-align: center;
+            padding: 4rem 1.5rem 2rem;
+            margin-top: 4rem;
+            background: #020617;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-logo {
+            max-height: 40px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        /* ==========================================================================
+           RESPONSIVE DESIGN
+           ========================================================================== */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .card { padding: 1.5rem; }
+            h1 { font-size: 2rem; }
+            .timer-display { font-size: 4rem; }
+            .session-nav { flex-direction: column; gap: 1rem; }
+            .nav-btn { margin: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-pattern"></div>
+
+    <header>
+        <span class="championship-badge"><i class="fas fa-flag-checkered"></i> Level 1 Certification</span>
+        <div class="logo-container">
+            <img src="../logo.png" alt="TechTicket Logo" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'250\' height=\'50\'><text x=\'0\' y=\'40\' font-family=\'Arial\' font-size=\'32\' font-weight=\'bold\' fill=\'%23fbbf24\'><tspan fill=\'%23f8fafc\'&gt;Tech&lt;/tspan&gt;Ticket</text></svg>'">
+        </div>
+        <div class="program-title">Code Challenge Web Track</div>
+        <h1>Session 7 — Full Competition Simulation</h1>
+    </header>
+
+    <main class="container">
+
+        <section class="card danger-card">
+            <h2>🚨 COMPETITION PROTOCOL INITIATED</h2>
+            <p>Welcome to Session 7. The training wheels are off. You have learned the theory, the layouts, the tricks, and the time management strategies. Today, you must prove it.</p>
+            <p><strong>This is a strict simulation of a real Web Design Championship event.</strong></p>
+            <ul>
+                <li>You will build a complete component from scratch based ONLY on a text prompt.</li>
+                <li>You must work completely independently.</li>
+                <li>The clock is your enemy. You have exactly <strong>90 Minutes</strong>.</li>
+                <li>Do not open the Post-Challenge Review until the timer hits zero or you finish completely.</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>📜 The Official Rules</h2>
+            <p>Failure to follow these constraints will result in immediate disqualification or severe point deductions from the judges.</p>
+            
+            <div class="checklist" style="border-color: var(--accent-red); background: rgba(239, 68, 68, 0.05);">
+                <div class="check-item" style="border-color: rgba(239, 68, 68, 0.2);">
+                    <div style="color: var(--accent-red); font-size: 1.5rem; font-weight: bold;">❌</div>
+                    <div class="check-text">
+                        <h4 style="color: var(--accent-red);">NO Images Allowed</h4>
+                        <p>You cannot use <code>&lt;img&gt;</code> tags or external background images. You must simulate icons using Unicode characters or CSS shapes.</p>
+                    </div>
+                </div>
+                <div class="check-item" style="border-color: rgba(239, 68, 68, 0.2);">
+                    <div style="color: var(--accent-red); font-size: 1.5rem; font-weight: bold;">❌</div>
+                    <div class="check-text">
+                        <h4 style="color: var(--accent-red);">NO JavaScript Allowed</h4>
+                        <p>Your layout and hover effects must rely 100% on HTML and CSS.</p>
+                    </div>
+                </div>
+                <div class="check-item" style="border-color: rgba(239, 68, 68, 0.2);">
+                    <div style="color: var(--accent-red); font-size: 1.5rem; font-weight: bold;">❌</div>
+                    <div class="check-text">
+                        <h4 style="color: var(--accent-red);">NO Frameworks</h4>
+                        <p>No Bootstrap, Tailwind, or external icon libraries. Vanilla code only.</p>
+                    </div>
+                </div>
+            </div>
+            <p><em>Use the 6-Step Strategy: Read, Break, Plan, Build HTML, Style CSS, Debug.</em></p>
+        </section>
+
+        <section class="card focus-card">
+            <h2>⏱️ Official Match Timer</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Do not start the timer until your code editor is open and blank files (index.html, style.css) are created.</p>
+            
+            <div class="timer-dashboard">
+                <div id="countdown-display" class="timer-display">90:00</div>
+                
+                <div class="timer-controls">
+                    <button id="btn-start" class="btn btn-primary" onclick="startTimer()">START MATCH</button>
+                    <button id="btn-pause" class="btn" onclick="pauseTimer()" disabled>PAUSE</button>
+                    <button id="btn-reset" class="btn btn-danger" onclick="resetTimer()">RESET</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>🏆 The Challenge Brief</h2>
+            
+            <div style="background: #020617; padding: 2rem; border-radius: 8px; border-left: 4px solid var(--accent-cyan); font-family: var(--font-code); font-size: 0.95rem; line-height: 1.8; color: #cbd5e1; margin-bottom: 2rem;">
+                <strong>TASK:</strong> Build a "Sports Training" Landing Section.<br><br>
+                <strong>REQUIREMENTS:</strong><br>
+                1. The section must have a main title: "Elite Athlete Programs".<br>
+                2. Below the title, there must be exactly THREE identical cards in a single row.<br>
+                3. The cards are for: "Strength Training", "Speed & Agility", and "Endurance".<br>
+                4. Each card MUST contain:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;a) A circular badge at the top containing a relevant Unicode Icon.<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;b) The Program Title.<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;c) A short description paragraph.<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;d) A "Join Now" button at the bottom.<br>
+                5. <strong>Design:</strong> The layout must use Flexbox. Cards must have a dark background, white text, 20px padding, rounded corners, and a subtle border.<br>
+                6. <strong>Responsiveness:</strong> On screens smaller than 768px, the cards must stack vertically.<br>
+                7. <strong>Interaction:</strong> When hovering over a card, it should lift up slightly and gain a colored box-shadow.
+            </div>
+
+            <button class="btn-hint" onclick="toggleElement('hints-section', this)">Request Tactical Hint (Costs Time!)</button>
+            <div id="hints-section" class="hint-content">
+                <strong>Coach's Advice:</strong><br>
+                1. Build the HTML skeleton first. Don't touch CSS until all text and buttons are on the page.<br>
+                2. Use <code>display: flex; gap: 20px;</code> on the parent container.<br>
+                3. Use <code>flex: 1; min-width: 250px; flex-wrap: wrap;</code> on the cards. This makes them responsive automatically without needing complex media queries!<br>
+                4. Unicode ideas: 💪 (Strength), ⚡ (Speed), 🏃 (Endurance).
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>📋 Submission Checklist & Scoring</h2>
+            <p>Before you declare you are finished, verify your work against the Judges' rubric.</p>
+
+            <div class="checklist">
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box"></div>
+                    <div class="check-text">
+                        <h4>1. Architecture Complete</h4>
+                        <p>Main title and 3 cards exist. No missing text or buttons.</p>
+                    </div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box"></div>
+                    <div class="check-text">
+                        <h4>2. Layout Accuracy</h4>
+                        <p>Cards are in a horizontal row on desktop and take up exactly equal width.</p>
+                    </div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box"></div>
+                    <div class="check-text">
+                        <h4>3. Constraint Adherence</h4>
+                        <p>No images were used. Unicode icons are centered inside circular badges.</p>
+                    </div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box"></div>
+                    <div class="check-text">
+                        <h4>4. Responsive Behavior</h4>
+                        <p>When the browser window is shrunk to mobile size, the cards stack vertically without text overflowing.</p>
+                    </div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box"></div>
+                    <div class="check-text">
+                        <h4>5. Polish & Interaction</h4>
+                        <p>Hovering over the cards triggers a smooth CSS transition (transform & box-shadow).</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; color: var(--text-main); font-size: 1.1rem; text-transform: uppercase;">Official Scoring Weights</h3>
+            <div class="score-grid">
+                <div class="score-card">
+                    <span class="score-val">30%</span>
+                    <span class="score-label">Layout Accuracy</span>
+                </div>
+                <div class="score-card">
+                    <span class="score-val">30%</span>
+                    <span class="score-label">Requirements</span>
+                </div>
+                <div class="score-card">
+                    <span class="score-val">20%</span>
+                    <span class="score-label">Design Quality</span>
+                </div>
+                <div class="score-card">
+                    <span class="score-val">10%</span>
+                    <span class="score-label">Responsive</span>
+                </div>
+                <div class="score-card">
+                    <span class="score-val">10%</span>
+                    <span class="score-label">Clean Code</span>
+                </div>
+            </div>
+        </section>
+
+        <button class="collapsible-btn" id="review-btn" onclick="toggleReview()">OPEN POST-CHALLENGE REVIEW (SPOILERS)</button>
+        
+        <div id="review-section" class="collapsible-content">
+            <h2 style="color: var(--accent-gold); border-bottom: none; margin-top: 0;">🔍 Judges' Review & Solution</h2>
+            <p>If you have finished, or the timer has expired, review the optimal solution below. How does your code compare?</p>
+            
+            <h3 style="color: var(--accent-cyan);">Common Mistakes Made Under Pressure:</h3>
+            <ul style="color: var(--text-muted);">
+                <li>Forgetting <code>box-sizing: border-box;</code> causing padding to blow up the card widths.</li>
+                <li>Putting the <code>transition</code> property on the <code>:hover</code> state instead of the base <code>.card</code> class (causing a jerky animation when the mouse leaves).</li>
+                <li>Writing completely separate media queries instead of just using <code>flex-wrap</code> and <code>min-width</code>.</li>
+            </ul>
+
+            <h3 style="color: var(--accent-green); margin-top: 2rem;">The Optimal Speed-Code Solution</h3>
+            
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div>
+                    <span class="code-tab">index.html</span>
+                    <button class="btn-copy" onclick="copyCode('code-sol-html', this)">Copy Code</button>
+                </div>
+<pre id="code-sol-html"><code><span class="sy-tag">&lt;section</span> <span class="sy-attr">class</span>=<span class="sy-val">"programs"</span><span class="sy-tag">&gt;</span>
+  <span class="sy-tag">&lt;h2</span> <span class="sy-attr">class</span>=<span class="sy-val">"main-title"</span><span class="sy-tag">&gt;</span>Elite Athlete Programs<span class="sy-tag">&lt;/h2&gt;</span>
+  
+  <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"card-container"</span><span class="sy-tag">&gt;</span>
+    <span class="sy-cmt">&lt;!-- Card 1 --&gt;</span>
+    <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"card"</span><span class="sy-tag">&gt;</span>
+      <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"icon-badge"</span><span class="sy-tag">&gt;</span>💪<span class="sy-tag">&lt;/div&gt;</span>
+      <span class="sy-tag">&lt;h3&gt;</span>Strength Training<span class="sy-tag">&lt;/h3&gt;</span>
+      <span class="sy-tag">&lt;p&gt;</span>Build raw power and muscle.<span class="sy-tag">&lt;/p&gt;</span>
+      <span class="sy-tag">&lt;button</span> <span class="sy-attr">class</span>=<span class="sy-val">"btn"</span><span class="sy-tag">&gt;</span>Join Now<span class="sy-tag">&lt;/button&gt;</span>
+    <span class="sy-tag">&lt;/div&gt;</span>
+    
+    <span class="sy-cmt">&lt;!-- Duplicate card div twice for Speed/Endurance --&gt;</span>
+  <span class="sy-tag">&lt;/div&gt;</span>
+<span class="sy-tag">&lt;/section&gt;</span></code></pre>
+            </div>
+
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="mac-dot dot-green"></div></div>
+                    <span class="code-tab">style.css (Layout & Logic)</span>
+                    <button class="btn-copy" onclick="copyCode('code-sol-css', this)">Copy Code</button>
+                </div>
+<pre id="code-sol-css"><code><span class="sy-sel">*</span> { <span class="sy-prop">box-sizing</span>: <span class="sy-val">border-box</span>; <span class="sy-prop">margin</span>: <span class="sy-num">0</span>; }
+
+<span class="sy-cmt">/* The Magic Responsive Layout */</span>
+<span class="sy-sel">.card-container</span> {
+  <span class="sy-prop">display</span>: <span class="sy-val">flex</span>;
+  <span class="sy-prop">gap</span>: <span class="sy-num">20px</span>;
+  <span class="sy-prop">flex-wrap</span>: <span class="sy-val">wrap</span>; <span class="sy-cmt">/* Allows stacking on mobile */</span>
+  <span class="sy-prop">justify-content</span>: <span class="sy-val">center</span>;
+}
+
+<span class="sy-sel">.card</span> {
+  <span class="sy-prop">flex</span>: <span class="sy-val">1</span>;             <span class="sy-cmt">/* Forces equal width */</span>
+  <span class="sy-prop">min-width</span>: <span class="sy-num">280px</span>;    <span class="sy-cmt">/* Forces stacking when screen is small! */</span>
+  <span class="sy-prop">background</span>: <span class="sy-val">#1e293b</span>;
+  <span class="sy-prop">padding</span>: <span class="sy-num">30px</span>;
+  <span class="sy-prop">border-radius</span>: <span class="sy-num">12px</span>;
+  <span class="sy-prop">transition</span>: <span class="sy-val">transform 0.3s, box-shadow 0.3s</span>; <span class="sy-cmt">/* Base state transition */</span>
+}
+
+<span class="sy-cmt">/* Hover Polish */</span>
+<span class="sy-sel">.card:hover</span> {
+  <span class="sy-prop">transform</span>: <span class="sy-val">translateY(-10px)</span>;
+  <span class="sy-prop">box-shadow</span>: <span class="sy-val">0 15px 30px rgba(0,0,0,0.5)</span>;
+}
+
+<span class="sy-cmt">/* Fake Image Trick */</span>
+<span class="sy-sel">.icon-badge</span> {
+  <span class="sy-prop">width</span>: <span class="sy-num">60px</span>; <span class="sy-prop">height</span>: <span class="sy-num">60px</span>;
+  <span class="sy-prop">border-radius</span>: <span class="sy-val">50%</span>;
+  <span class="sy-prop">background</span>: <span class="sy-val">#3b82f6</span>;
+  <span class="sy-prop">display</span>: <span class="sy-val">flex</span>;
+  <span class="sy-prop">justify-content</span>: <span class="sy-val">center</span>;
+  <span class="sy-prop">align-items</span>: <span class="sy-val">center</span>;
+  <span class="sy-prop">font-size</span>: <span class="sy-num">30px</span>;
+  <span class="sy-prop">margin-bottom</span>: <span class="sy-num">20px</span>;
+}</code></pre>
+            </div>
+        </div>
+
+        <div class="session-nav">
+            <a href="session6.html" class="nav-btn">⬅ Previous Session</a>
+            <a href="session8.html" class="nav-btn">Next Session ➡</a>
+        </div>
+
+    </main>
+
+    <footer>
+        <div style="margin-bottom: 1rem;">
+            <img src="../logo.png" alt="TechTicket Logo" class="footer-logo" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'150\' height=\'30\'><text x=\'0\' y=\'25\' font-family=\'Arial\' font-size=\'20\' font-weight=\'bold\' fill=\'%23fbbf24\'><tspan fill=\'%23f8fafc\'&gt;Tech&lt;/tspan&gt;Ticket</text></svg>'">
+        </div>
+        <p>© TechTicket Academy — Educational material for TechTicket students only. Redistribution is not allowed.</p>
+    </footer>
+
+    <script>
+        // 1. Copy Code Functionality
+        function copyCode(elementId, btn) {
+            const codeEl = document.getElementById(elementId);
+            const text = codeEl.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = "Copied! ✓";
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // 2. Generic Hint Toggle
+        function toggleElement(id, btn) {
+            const el = document.getElementById(id);
+            if (el.style.display === "block") {
+                el.style.display = "none";
+                btn.innerText = "Request Tactical Hint (Costs Time!)";
+            } else {
+                el.style.display = "block";
+                btn.innerText = "Hide Hint";
+            }
+        }
+
+        // 3. Checklist Logic
+        function toggleCheck(item) {
+            const box = item.querySelector('.check-box');
+            box.classList.toggle('checked');
+        }
+
+        // 4. Post Review Toggle
+        function toggleReview() {
+            const btn = document.getElementById('review-btn');
+            const content = document.getElementById('review-section');
+            
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                btn.classList.remove('active');
+            } else {
+                content.style.display = "block";
+                btn.classList.add('active');
+                // Scroll down slightly to show content
+                setTimeout(() => {
+                    content.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+
+        // 5. Hardcore Timer Logic
+        let timerInterval;
+        let totalSeconds = 90 * 60; // 90 mins default
+        const defaultTime = 90 * 60;
+        let isRunning = false;
+
+        function updateDisplay() {
+            const display = document.getElementById('countdown-display');
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            display.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Visual warnings based on time left
+            display.classList.remove('warning', 'danger');
+            if (totalSeconds <= 5 * 60 && totalSeconds > 60) {
+                // 5 mins left
+                display.classList.add('warning');
+            } else if (totalSeconds <= 60 && totalSeconds > 0) {
+                // 1 min left
+                display.classList.add('danger');
+            } else if (totalSeconds === 0) {
+                display.classList.add('danger');
+                display.classList.remove('running');
+            }
+        }
+
+        function startTimer() {
+            if (isRunning || totalSeconds === 0) return;
+            
+            const display = document.getElementById('countdown-display');
+            display.classList.add('running');
+            
+            document.getElementById('btn-start').disabled = true;
+            document.getElementById('btn-pause').disabled = false;
+            
+            isRunning = true;
+            timerInterval = setInterval(() => {
+                if (totalSeconds > 0) {
+                    totalSeconds--;
+                    updateDisplay();
+                } else {
+                    stopTimer();
+                    alert("🚨 TIME IS UP! Hands off the keyboard. Step away from the computer.");
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            if (!isRunning) return;
+            clearInterval(timerInterval);
+            isRunning = false;
+            
+            document.getElementById('countdown-display').classList.remove('running');
+            document.getElementById('btn-start').disabled = false;
+            document.getElementById('btn-pause').disabled = true;
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            if(confirm("Are you sure you want to reset the competition timer?")) {
+                totalSeconds = defaultTime;
+                updateDisplay();
+                document.getElementById('countdown-display').classList.remove('danger', 'warning');
+            }
+        }
+
+        // Init timer display on load
+        window.onload = () => {
+            updateDisplay();
+        };
+    </script>
+</body>
+</html>

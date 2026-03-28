@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechTicket | Code Challenge Championship Training</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           CSS VARIABLES & THEME (Dark Developer Theme)
+           ========================================================================== */
+        :root {
+            /* Backgrounds */
+            --bg-main: #060b14;
+            --bg-card: #0f172a;
+            --bg-card-hover: #1e293b;
+            --bg-code: #020617;
+            
+            /* Text */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            /* Accents */
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            --gradient-comp: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            
+            /* Borders & Shadows */
+            --border-color: #334155;
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.4);
+            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            
+            /* Typography & Animation */
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --font-code: 'Fira Code', monospace;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ==========================================================================
+           GLOBAL RESETS
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        /* Subtle Background Grid */
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           TYPOGRAPHY
+           ========================================================================== */
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        h1 { font-size: 2.5rem; font-weight: 800; text-align: center; }
+        
+        h2 { 
+            font-size: 1.8rem; 
+            font-weight: 700;
+            color: var(--accent-cyan);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h3 { font-size: 1.4rem; color: var(--accent-purple); margin-top: 1.5rem; }
+        h4 { font-size: 1.1rem; color: var(--accent-blue); }
+
+        p { margin-bottom: 1.2rem; }
+        ul, ol { margin-left: 1.5rem; margin-bottom: 1.2rem; }
+        li { margin-bottom: 0.5rem; }
+
+        strong { color: var(--accent-cyan); font-weight: 600; }
+        em { color: var(--accent-purple); font-style: normal; font-weight: 600; }
+
+        code:not(pre code) {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-cyan);
+            padding: 0.2em 0.4em;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9em;
+        }
+
+        /* ==========================================================================
+           LAYOUT
+           ========================================================================== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(180deg, #0f172a 0%, var(--bg-main) 100%);
+            padding: 3rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .championship-badge {
+            display: inline-block;
+            background: var(--gradient-comp);
+            color: #ffffff;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 4px 25px rgba(59, 130, 246, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
+        }
+
+        .logo-container img {
+            max-height: 50px;
+            margin-bottom: 1rem;
+        }
+
+        .program-title {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cards (Sections) */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0.5;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #475569;
+            box-shadow: var(--shadow-glow);
+        }
+        .card:hover::before { opacity: 1; }
+
+        .card.comp-card::before { background: var(--gradient-comp); opacity: 0.8; }
+        .card.comp-card { border-color: rgba(139, 92, 246, 0.3); }
+
+        /* ==========================================================================
+           CODE BLOCKS (VS Code Style)
+           ========================================================================== */
+        .code-window {
+            background-color: var(--bg-code);
+            border-radius: var(--radius-md);
+            border: 1px solid #334155;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .code-header {
+            background-color: #0f172a;
+            padding: 0.6rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .mac-dots { display: flex; gap: 6px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background-color: #ef4444; }
+        .dot-yellow { background-color: #f59e0b; }
+        .dot-green { background-color: #10b981; }
+
+        .code-tab {
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .btn-copy {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--text-muted);
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-copy:hover {
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .btn-copy.copied {
+            background: var(--accent-green);
+            color: #020617;
+            border-color: var(--accent-green);
+        }
+
+        pre { padding: 1.5rem; overflow-x: auto; margin: 0; }
+        pre code {
+            font-family: var(--font-code);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        /* Syntax Highlighting */
+        .sy-tag { color: #f472b6; } /* Pink */
+        .sy-attr { color: #fbbf24; } /* Yellow */
+        .sy-val { color: #34d399; } /* Green */
+        .sy-sel { color: #60a5fa; } /* Blue */
+        .sy-prop { color: #38bdf8; } /* Cyan */
+        .sy-num { color: #c084fc; } /* Purple */
+        .sy-cmt { color: #64748b; font-style: italic; } /* Gray */
+        .sy-query { color: #f43f5e; font-weight: bold; } /* Red for @media */
+
+        /* ==========================================================================
+           VISUAL DIAGRAMS & DEMOS
+           ========================================================================== */
+        .demo-panel {
+            background-color: var(--bg-code);
+            border: 1px dashed #475569;
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            overflow-x: auto;
+        }
+
+        /* Desktop vs Mobile Visual Diagram */
+        .layout-diagram {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .diagram-device {
+            background: #1e293b;
+            border: 2px solid #475569;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+        }
+
+        .diagram-desktop { width: 300px; height: 200px; }
+        .diagram-mobile { width: 120px; height: 240px; border-radius: 16px; border-width: 4px; border-color: #334155; }
+
+        .d-header { background: #3b82f6; height: 20px; border-radius: 4px; }
+        .d-row { display: flex; gap: 10px; flex: 1; }
+        .d-col { background: #10b981; flex: 1; border-radius: 4px; }
+        
+        .diagram-mobile .d-row { flex-direction: column; }
+        .diagram-mobile .d-col { height: 40px; flex: none; }
+
+        .diagram-label {
+            color: var(--text-main);
+            text-align: center;
+            font-weight: bold;
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* Interactive Resize Demo */
+        .resize-wrapper {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .resize-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .resize-container {
+            width: 100%;
+            max-width: 600px; /* Default desktop width */
+            border: 2px dashed var(--accent-cyan);
+            border-radius: 8px;
+            background: #1e293b;
+            padding: 1rem;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 0 auto;
+            overflow: hidden;
+            
+            /* Responsive Logic embedded via CSS classes toggled by JS */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .r-card {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            padding: 1rem;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            border: 2px solid #020617;
+            transition: all 0.5s ease;
+            
+            /* Default Desktop: 3 columns */
+            flex: 1 1 calc(33.333% - 10px);
+            min-width: 100px; /* Crucial for breaking to next line */
+        }
+
+        /* When wrapper is forced to mobile width via JS */
+        .resize-container.mobile-size { width: 300px; border-color: var(--accent-pink); }
+        .resize-container.mobile-size .r-card {
+            flex: 1 1 100%; /* Force full width stacking */
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+        }
+
+        /* ==========================================================================
+           INTERACTIVE BUTTONS
+           ========================================================================== */
+        .btn {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--accent-cyan);
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-sans);
+        }
+
+        .btn:hover, .btn.active {
+            background-color: var(--accent-cyan);
+            color: #020617;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+        }
+
+        .btn-comp {
+            background: var(--gradient-comp);
+            border: none;
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+        .btn-comp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Expandable Explanations */
+        .collapsible-btn {
+            background: transparent;
+            color: var(--accent-cyan);
+            border: none;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 0;
+            font-family: var(--font-sans);
+            width: 100%;
+            text-align: left;
+            margin-top: 1rem;
+        }
+        .collapsible-btn::before { content: '▶'; font-size: 0.8em; transition: transform 0.2s; }
+        .collapsible-btn.active::before { transform: rotate(90deg); }
+
+        .collapsible-content {
+            display: none;
+            padding: 1.5rem;
+            background-color: rgba(15, 23, 42, 0.8);
+            border-left: 2px solid var(--accent-cyan);
+            border-radius: 0 0 8px 8px;
+            margin-top: 0.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Exercise Boxes */
+        .exercise-box {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-left: 4px solid var(--accent-blue);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .challenge-box {
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-left: 4px solid var(--accent-purple);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .btn-hint {
+            background: transparent;
+            color: var(--accent-yellow);
+            border: 1px solid var(--accent-yellow);
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        .btn-hint:hover { background: var(--accent-yellow); color: #000; }
+
+        .hint-content {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(245, 158, 11, 0.05);
+            border-left: 2px solid var(--accent-yellow);
+            border-radius: 0 4px 4px 0;
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================================
+           NAVIGATION & FOOTER
+           ========================================================================== */
+        .session-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-btn {
+            background: var(--bg-card);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            text-align: center;
+            flex: 1;
+            margin: 0 0.5rem;
+        }
+        .nav-btn:hover { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            margin-top: 4rem;
+            background: #020617;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .footer-logo {
+            max-height: 40px;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        /* ==========================================================================
+           RESPONSIVE DESIGN
+           ========================================================================== */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .card { padding: 1.5rem; }
+            h1 { font-size: 2rem; }
+            .session-nav { flex-direction: column; gap: 1rem; }
+            .nav-btn { margin: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-pattern"></div>
+
+    <header>
+        <span class="championship-badge"><i class="fas fa-bolt"></i> Championship Training</span>
+        <div class="logo-container">
+            <img src="../logo.png" alt="TechTicket Logo" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'250\' height=\'50\'><text x=\'0\' y=\'40\' font-family=\'Arial\' font-size=\'32\' font-weight=\'bold\' fill=\'%2306b6d4\'><tspan fill=\'%23f8fafc\'&gt;Tech&lt;/tspan&gt;Ticket</text></svg>'">
+        </div>
+        <div class="program-title">Code Challenge Web Track</div>
+        <h1>Session 5 — Responsive Design Under Pressure</h1>
+    </header>
+
+    <main class="container">
+
+        <section class="card comp-card">
+            <h2>🎯 Session Overview</h2>
+            <p>Welcome to Session 5! You have learned how to build beautiful card layouts using Flexbox. But there is a massive trap waiting for you in competitions.</p>
+            <p>You code your layout perfectly on a 15-inch laptop screen. Time runs out. The judge opens your code on an iPad or a small laptop monitor... and your layout completely shatters. Cards overflow the screen, text gets cut off, and you lose points.</p>
+            <p>Today, you will learn to survive the screen-size test. You will learn:</p>
+            <ul>
+                <li>What <strong>Responsive Design</strong> is and why judges look for it.</li>
+                <li>How to use <strong>Media Queries</strong> to change your CSS rules based on screen size.</li>
+                <li>How to train your mind to think <strong>"Mobile-First"</strong>.</li>
+                <li>How to make Flexbox wrap elements automatically to prevent broken layouts.</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>🏆 The Competition Context</h2>
+            <p>In a coding challenge, the prompt might not explicitly say "Make it responsive for mobile phones." But judges are developers. They will instinctively resize the browser window to see if your code breaks.</p>
+            
+            <p><strong>Common Layout Failures:</strong></p>
+            <ul>
+                <li>❌ <strong>Fixed Widths:</strong> Hardcoding <code>width: 1200px</code> guarantees your site will break on small screens, causing a horrible horizontal scrollbar.</li>
+                <li>❌ <strong>Squished Cards:</strong> Using Flexbox without wrapping forces cards to become incredibly thin, pushing text out of their borders.</li>
+                <li>✅ <strong>The Winning Move:</strong> Using flexible widths (<code>%</code> or <code>max-width</code>) and media queries to cleanly stack elements vertically when space runs out.</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>📱 What is Responsive Design?</h2>
+            <p>Responsive design is the practice of building a single HTML page that changes its layout and CSS styling depending on the width of the screen (the "viewport").</p>
+
+            <div class="demo-panel">
+                <h4 style="margin-bottom: 1rem; color: var(--text-main);">Desktop vs Mobile Layout</h4>
+                <div class="layout-diagram">
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <div class="diagram-device diagram-desktop">
+                            <div class="d-header"></div>
+                            <div class="d-row">
+                                <div class="d-col"></div>
+                                <div class="d-col"></div>
+                                <div class="d-col"></div>
+                            </div>
+                        </div>
+                        <div class="diagram-label">Desktop (Side-by-Side)</div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <div class="diagram-device diagram-mobile">
+                            <div class="d-header"></div>
+                            <div class="d-row">
+                                <div class="d-col"></div>
+                                <div class="d-col"></div>
+                                <div class="d-col"></div>
+                            </div>
+                        </div>
+                        <div class="diagram-label">Mobile (Stacked vertically)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <p>Notice how the 3 columns on the desktop layout reorganize themselves into a single, vertical column on the phone. This prevents squishing!</p>
+        </section>
+
+        <section class="card">
+            <h2>📏 The Secret Weapon: Media Queries</h2>
+            <p>To tell the browser to change the layout, we use a CSS "At-Rule" called <strong><code>@media</code></strong>. Think of it as an "IF statement" for CSS.</p>
+
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="mac-dot dot-red"></div><div class="mac-dot dot-yellow"></div><div class="mac-dot dot-green"></div></div>
+                    <span class="code-tab">CSS</span>
+                    <button class="btn-copy" onclick="copyCode('code-media', this)">Copy Code</button>
+                </div>
+<pre id="code-media"><code><span class="sy-cmt">/* 1. Default Style (Mobile First Approach) */</span>
+<span class="sy-sel">body</span> {
+  <span class="sy-prop">background-color</span>: <span class="sy-val">#0f172a</span>; <span class="sy-cmt">/* Dark Blue */</span>
+}
+
+<span class="sy-cmt">/* 2. Media Query for larger screens (Tablet/Desktop) */</span>
+<span class="sy-query">@media</span> (<span class="sy-prop">min-width</span>: <span class="sy-val">768px</span>) {
+  <span class="sy-sel">body</span> {
+    <span class="sy-prop">background-color</span>: <span class="sy-val">#10b981</span>; <span class="sy-cmt">/* Turns Green on Desktop! */</span>
+  }
+}</code></pre>
+            </div>
+            
+            <button class="collapsible-btn" onclick="toggleElement('explain-mobile-first', this)">What does "Mobile-First" mean?</button>
+            <div id="explain-mobile-first" class="collapsible-content">
+                <p>Instead of building the Desktop site first and trying to fix it for mobile (which is hard), champions build the Mobile site first!</p>
+                <p>You write your default CSS so that everything stacks vertically (the natural way HTML flows). Then, you use <code>@media (min-width: 768px)</code> to say: <em>"If the screen is wide enough, turn on Flexbox and put them side-by-side!"</em></p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>🔄 Flexbox Wrapping & Flexible Widths</h2>
+            <p>Sometimes you don't even need a media query! Flexbox has a built-in superpower called <code>flex-wrap</code>.</p>
+            <p>If you give your cards a <code>min-width</code>, and tell the container to <code>flex-wrap: wrap</code>, the browser will automatically drop cards to the next line if there isn't enough room.</p>
+
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="mac-dot dot-red"></div><div class="mac-dot dot-yellow"></div><div class="mac-dot dot-green"></div></div>
+                    <span class="code-tab">CSS</span>
+                    <button class="btn-copy" onclick="copyCode('code-wrap', this)">Copy Code</button>
+                </div>
+<pre id="code-wrap"><code><span class="sy-sel">.card-container</span> {
+  <span class="sy-prop">display</span>: <span class="sy-val">flex</span>;
+  <span class="sy-prop">flex-wrap</span>: <span class="sy-val">wrap</span>; <span class="sy-cmt">/* Allows cards to move to the next row */</span>
+  <span class="sy-prop">gap</span>: <span class="sy-val">20px</span>;
+}
+
+<span class="sy-sel">.card</span> {
+  <span class="sy-prop">flex</span>: <span class="sy-val">1</span>;             <span class="sy-cmt">/* Grow to fill empty space */</span>
+  <span class="sy-prop">min-width</span>: <span class="sy-val">250px</span>;  <span class="sy-cmt">/* BUT never shrink smaller than 250px! */</span>
+}</code></pre>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>🎮 Interactive Demo: The Resize Simulator</h2>
+            <p>This demo uses the exact CSS code shown above (Flex Wrap + Min-Width). Click the buttons to simulate the judge resizing your website. Watch the cards protect themselves by dropping to the next line!</p>
+
+            <div class="resize-wrapper">
+                <div class="resize-controls">
+                    <button class="btn active" onclick="simulateResize('100%', this)">💻 Desktop (Wide)</button>
+                    <button class="btn" onclick="simulateResize('300px', this)">📱 Mobile (Narrow)</button>
+                </div>
+                
+                <div id="demo-resize-container" class="resize-container">
+                    <div class="r-card">Card 1</div>
+                    <div class="r-card">Card 2</div>
+                    <div class="r-card">Card 3</div>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">Notice how the border turns pink on mobile to simulate a Media Query changing styles!</p>
+        </section>
+
+        <section class="card">
+            <h2>🏋️‍♂️ Training Drills</h2>
+            <p>Open your code editor. Build a fast, flexible layout.</p>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 1 (Easy): The Safe Container</h4>
+                <p>Never let text touch the edge of the screen! Create a <code>&lt;div class="container"&gt;</code>. In CSS, limit its size using <code>max-width: 800px;</code> and center it on the screen using <code>margin: 0 auto;</code>.</p>
+                <button class="btn-hint" onclick="toggleElement('hint1', this)">💡 Show Hint</button>
+                <div id="hint1" class="hint-content">
+                    <code>.container { max-width: 800px; margin: 0 auto; padding: 20px; }</code><br>Using max-width instead of width means it can shrink on small screens safely!
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 2 (Medium): Media Query Flip</h4>
+                <p>Create a layout that is a single column by default (mobile-first). Add a media query for <code>min-width: 600px</code>. Inside the media query, change the container to <code>display: flex;</code> so it becomes a row on larger screens.</p>
+                <button class="btn-hint" onclick="toggleElement('hint2', this)">💡 Show Hint</button>
+                <div id="hint2" class="hint-content">
+                    <code>.row { display: block; } /* Mobile */</code><br>
+                    <code>@media (min-width: 600px) { .row { display: flex; } } /* Desktop */</code>
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 3 (Hard): The 100% Image Fix</h4>
+                <p>Add a massive image to your HTML inside a small div. It will break the layout. Fix it by applying the golden rule of responsive images in your CSS.</p>
+                <button class="btn-hint" onclick="toggleElement('hint3', this)">💡 Show Hint</button>
+                <div id="hint3" class="hint-content">
+                    Always include this in your CSS: <br><code>img { max-width: 100%; height: auto; }</code>
+                </div>
+            </div>
+        </section>
+
+        <section class="card challenge-box">
+            <h2 style="color: var(--accent-purple); border-bottom-color: rgba(139, 92, 246, 0.3);">🔥 Competition Task: Responsive Card Section</h2>
+            <p><strong>Brief:</strong> "Build an info section with 3 cards that looks great on both mobile and desktop."</p>
+            
+            <p><strong>Requirements:</strong></p>
+            <ol>
+                <li>Create a container holding 3 simple cards (Title, Description, Button).</li>
+                <li><strong>Mobile View (Default):</strong> The cards must be stacked vertically (one on top of the other).</li>
+                <li><strong>Desktop View:</strong> When the screen is wider than <code>768px</code>, use a <strong>Media Query</strong> to align the cards side-by-side using Flexbox.</li>
+                <li>Cards must have clean padding, background colors, and a gap between them.</li>
+            </ol>
+            
+            <button class="btn-comp" onclick="toggleElement('challenge-answer', this)" style="margin-top: 1rem;">View Reference Solution</button>
+            
+            <div id="challenge-answer" class="collapsible-content" style="border-left-color: var(--accent-purple); background: #020617;">
+<pre style="background: transparent; padding: 0;"><code><span class="sy-cmt">/* 1. Mobile First: Default Styles */</span>
+<span class="sy-sel">.card-container</span> {
+  <span class="sy-prop">display</span>: <span class="sy-val">flex</span>;
+  <span class="sy-prop">flex-direction</span>: <span class="sy-val">column</span>; <span class="sy-cmt">/* Stack vertically on phones */</span>
+  <span class="sy-prop">gap</span>: <span class="sy-num">20px</span>;
+}
+
+<span class="sy-sel">.card</span> {
+  <span class="sy-prop">background</span>: <span class="sy-val">#1e293b</span>;
+  <span class="sy-prop">padding</span>: <span class="sy-num">20px</span>;
+  <span class="sy-prop">border-radius</span>: <span class="sy-num">8px</span>;
+}
+
+<span class="sy-cmt">/* 2. Desktop Styles: Only apply if screen is wide enough */</span>
+<span class="sy-query">@media</span> (<span class="sy-prop">min-width</span>: <span class="sy-val">768px</span>) {
+  <span class="sy-sel">.card-container</span> {
+    <span class="sy-prop">flex-direction</span>: <span class="sy-val">row</span>; <span class="sy-cmt">/* Put side-by-side on desktop */</span>
+  }
+  
+  <span class="sy-sel">.card</span> {
+    <span class="sy-prop">flex</span>: <span class="sy-val">1</span>; <span class="sy-cmt">/* Make them equal width */</span>
+  }
+}</code></pre>
+            </div>
+        </section>
+
+        <section class="card" style="border-left: 4px solid var(--accent-blue); background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), transparent);">
+            <h2 style="color: var(--accent-blue); border-bottom-color: rgba(59, 130, 246, 0.2);">🏠 Homework: Rescue the Product Card</h2>
+            <p>Open the Premium Product Card you built in Session 3.</p>
+            <ul>
+                <li>Right now, it has a fixed width (e.g., <code>width: 800px;</code>). Change that to <code>max-width: 800px; width: 100%;</code> so it can shrink.</li>
+                <li>Add a Media Query so that on mobile screens, the Two-Column layout (Visual on Left, Info on Right) collapses into a Single Column (Visual on Top, Info on Bottom).</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>📝 Session Summary</h2>
+            <ul>
+                <li><strong>Responsive Design</strong> ensures your layout doesn't break when judges test your code on different devices.</li>
+                <li><strong>Media Queries (<code>@media</code>)</strong> allow you to inject specific CSS rules only when the screen matches your size conditions.</li>
+                <li><strong>Mobile-First Thinking:</strong> Write the default CSS for stacked, simple mobile layouts first. Then use <code>min-width</code> queries to add complex Flexbox rows for desktops.</li>
+                <li><strong>Flex Wrap:</strong> Using <code>flex-wrap: wrap;</code> with a <code>min-width</code> on child items is a genius way to create responsive layouts without writing a single media query!</li>
+            </ul>
+        </section>
+
+        <div class="session-nav">
+            <a href="session4.html" class="nav-btn">⬅ Previous Session</a>
+            <a href="session6.html" class="nav-btn">Next Session ➡</a>
+        </div>
+
+    </main>
+
+    <footer>
+        <div style="margin-bottom: 1rem; opacity: 0.7;">
+            <img src="../logo.png" alt="TechTicket Logo" style="max-height: 40px;" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'150\' height=\'30\'><text x=\'0\' y=\'25\' font-family=\'Arial\' font-size=\'20\' font-weight=\'bold\' fill=\'%2306b6d4\'><tspan fill=\'%23f8fafc\'&gt;Tech&lt;/tspan&gt;Ticket</text></svg>'">
+        </div>
+        <p>© TechTicket Academy — Educational material for TechTicket students only. Redistribution is not allowed.</p>
+    </footer>
+
+    <script>
+        // 1. Copy Code Functionality
+        function copyCode(elementId, btn) {
+            const codeEl = document.getElementById(elementId);
+            const text = codeEl.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = "Copied! ✓";
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // 2. Toggle Elements (Hints & Expandables)
+        function toggleElement(id, btn) {
+            const el = document.getElementById(id);
+            if (el.style.display === "block") {
+                el.style.display = "none";
+                if(btn && btn.classList.contains('collapsible-btn')) btn.classList.remove('active');
+            } else {
+                el.style.display = "block";
+                if(btn && btn.classList.contains('collapsible-btn')) btn.classList.add('active');
+            }
+        }
+
+        // 3. Interactive Resize Simulator Logic
+        function simulateResize(width, btnElement) {
+            // Update wrapper width to simulate viewport
+            const demoContainer = document.getElementById('demo-resize-container');
+            demoContainer.style.width = width;
+
+            // Manage active button state
+            const buttons = btnElement.parentElement.querySelectorAll('button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            // Apply specific class for mobile simulation to trigger CSS visual cues (like pink border)
+            if(width === '300px') {
+                demoContainer.classList.add('mobile-size');
+            } else {
+                demoContainer.classList.remove('mobile-size');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechTicket | Code Challenge Championship Training</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           CSS VARIABLES & THEME (Dark Speed/Warning Theme)
+           ========================================================================== */
+        :root {
+            /* Backgrounds */
+            --bg-main: #060b14;
+            --bg-card: #0f172a;
+            --bg-card-hover: #1e293b;
+            --bg-code: #020617;
+            
+            /* Text */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            /* Accents - Speed & Urgency Theme */
+            --accent-red: #ef4444;
+            --accent-orange: #f97316;
+            --accent-yellow: #f59e0b;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, var(--accent-orange), var(--accent-red));
+            --gradient-comp: linear-gradient(135deg, var(--accent-red), #991b1b);
+            
+            /* Borders & Shadows */
+            --border-color: #334155;
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-glow: 0 0 20px rgba(239, 68, 68, 0.4);
+            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            
+            /* Typography & Animation */
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --font-code: 'Fira Code', monospace;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ==========================================================================
+           GLOBAL RESETS
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        /* Speed Lines Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: repeating-linear-gradient(45deg, rgba(239, 68, 68, 0.02) 0px, rgba(239, 68, 68, 0.02) 2px, transparent 2px, transparent 20px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           TYPOGRAPHY
+           ========================================================================== */
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        h1 { font-size: 2.5rem; font-weight: 900; text-align: center; letter-spacing: -1px; }
+        
+        h2 { 
+            font-size: 1.8rem; 
+            font-weight: 800;
+            color: var(--accent-orange);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h3 { font-size: 1.4rem; color: var(--accent-red); margin-top: 1.5rem; }
+        h4 { font-size: 1.1rem; color: var(--accent-yellow); }
+
+        p { margin-bottom: 1.2rem; }
+        ul, ol { margin-left: 1.5rem; margin-bottom: 1.2rem; }
+        li { margin-bottom: 0.5rem; }
+
+        strong { color: var(--accent-orange); font-weight: 700; }
+        em { color: var(--accent-red); font-style: normal; font-weight: 700; }
+
+        code:not(pre code) {
+            background: rgba(249, 115, 22, 0.15);
+            color: var(--accent-orange);
+            padding: 0.2em 0.4em;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9em;
+        }
+
+        /* ==========================================================================
+           LAYOUT
+           ========================================================================== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(180deg, #1e0f0f 0%, var(--bg-main) 100%);
+            padding: 3rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--accent-red);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .championship-badge {
+            display: inline-block;
+            background: var(--gradient-primary);
+            color: #ffffff;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+            animation: pulse-red 1.5s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 4px 25px rgba(239, 68, 68, 0.7); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+        }
+
+        .logo-container img {
+            max-height: 50px;
+            margin-bottom: 1rem;
+        }
+
+        .program-title {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cards (Sections) */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0.5;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #475569;
+            box-shadow: var(--shadow-glow);
+        }
+        .card:hover::before { opacity: 1; }
+
+        .card.danger-card::before { background: var(--gradient-comp); opacity: 0.8; }
+        .card.danger-card { border-color: rgba(239, 68, 68, 0.3); }
+
+        /* ==========================================================================
+           CODE BLOCKS (VS Code Style)
+           ========================================================================== */
+        .code-window {
+            background-color: var(--bg-code);
+            border-radius: var(--radius-md);
+            border: 1px solid #334155;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .code-header {
+            background-color: #0f172a;
+            padding: 0.6rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .mac-dots { display: flex; gap: 6px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background-color: #ef4444; }
+        .dot-yellow { background-color: #f59e0b; }
+        .dot-green { background-color: #10b981; }
+
+        .code-tab {
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .btn-copy {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--text-muted);
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-copy:hover {
+            color: var(--accent-orange);
+            border-color: var(--accent-orange);
+            background: rgba(249, 115, 22, 0.1);
+        }
+
+        .btn-copy.copied {
+            background: var(--accent-green);
+            color: #020617;
+            border-color: var(--accent-green);
+        }
+
+        pre { padding: 1.5rem; overflow-x: auto; margin: 0; }
+        pre code {
+            font-family: var(--font-code);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        /* Syntax Highlighting */
+        .sy-tag { color: #f472b6; } /* Pink */
+        .sy-attr { color: #fbbf24; } /* Yellow */
+        .sy-val { color: #34d399; } /* Green */
+        .sy-sel { color: #60a5fa; } /* Blue */
+        .sy-prop { color: #38bdf8; } /* Cyan */
+        .sy-num { color: #c084fc; } /* Purple */
+        .sy-cmt { color: #64748b; font-style: italic; } /* Gray */
+
+        /* ==========================================================================
+           VISUAL DIAGRAMS & DEMOS
+           ========================================================================== */
+        .demo-panel {
+            background-color: var(--bg-code);
+            border: 1px dashed #475569;
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            overflow-x: auto;
+        }
+
+        /* Time Distribution Chart (CSS Only) */
+        .time-chart {
+            width: 100%;
+            max-width: 600px;
+            height: 40px;
+            display: flex;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            margin: 1rem 0;
+        }
+        
+        .tc-segment {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-code);
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: #020617;
+            transition: var(--transition);
+        }
+        
+        .tc-segment:hover { filter: brightness(1.2); cursor: help; }
+
+        .tc-read { width: 10%; background: #3b82f6; }   /* Blue */
+        .tc-plan { width: 5%; background: #8b5cf6; }   /* Purple */
+        .tc-html { width: 30%; background: #10b981; }  /* Green */
+        .tc-css { width: 40%; background: #f59e0b; }   /* Yellow */
+        .tc-polish { width: 10%; background: #f97316; } /* Orange */
+        .tc-debug { width: 5%; background: #ef4444; }  /* Red */
+
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .legend-color { width: 12px; height: 12px; border-radius: 3px; }
+
+        /* Workflow Steps */
+        .workflow-diagram {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .wf-step {
+            background: #1e293b;
+            border: 2px solid var(--accent-orange);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 800;
+            text-align: center;
+            position: relative;
+        }
+
+        .wf-arrow {
+            color: var(--accent-red);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Countdown Timer Dashboard */
+        .timer-dashboard {
+            background: linear-gradient(135deg, #1e0f0f, #020617);
+            border: 2px solid var(--accent-red);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
+        }
+
+        .timer-display {
+            font-family: var(--font-code);
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--accent-red);
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+            margin: 1rem 0;
+            line-height: 1;
+            letter-spacing: 2px;
+        }
+        
+        .timer-display.running {
+            animation: pulse-text 1s infinite;
+        }
+        
+        @keyframes pulse-text {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; text-shadow: 0 0 20px rgba(239, 68, 68, 0.8); }
+            100% { opacity: 1; }
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        /* ==========================================================================
+           INTERACTIVE BUTTONS
+           ========================================================================== */
+        .btn {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--accent-orange);
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-sans);
+        }
+
+        .btn:hover, .btn.active {
+            background-color: var(--accent-orange);
+            color: #020617;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+        }
+
+        .btn-danger {
+            background: var(--gradient-comp);
+            border: none;
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6);
+        }
+
+        /* Expandable Explanations */
+        .collapsible-btn {
+            background: transparent;
+            color: var(--accent-yellow);
+            border: none;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 0;
+            font-family: var(--font-sans);
+            width: 100%;
+            text-align: left;
+            margin-top: 1rem;
+        }
+        .collapsible-btn::before { content: '▶'; font-size: 0.8em; transition: transform 0.2s; }
+        .collapsible-btn.active::before { transform: rotate(90deg); }
+
+        .collapsible-content {
+            display: none;
+            padding: 1.5rem;
+            background-color: rgba(15, 23, 42, 0.8);
+            border-left: 2px solid var(--accent-yellow);
+            border-radius: 0 0 8px 8px;
+            margin-top: 0.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Exercise Boxes */
+        .exercise-box {
+            background: rgba(249, 115, 22, 0.05);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            border-left: 4px solid var(--accent-orange);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .challenge-box {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-left: 4px solid var(--accent-red);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+        }
+
+        .btn-hint {
+            background: transparent;
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        .btn-hint:hover { background: var(--accent-cyan); color: #000; }
+
+        .hint-content {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(6, 182, 212, 0.05);
+            border-left: 2px solid var(--accent-cyan);
+            border-radius: 0 4px 4px 0;
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================================
+           NAVIGATION & FOOTER
+           ========================================================================== */
+        .session-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-btn {
+            background: var(--bg-card);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-md);
+            font-weight: 800;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            text-align: center;
+            flex: 1;
+            margin: 0 0.5rem;
+        }
+        .nav-btn:hover { background: var(--accent-orange); color: #020617; border-color: var(--accent-orange); }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            margin-top: 4rem;
+            background: #020617;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-logo {
+            max-height: 40px;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        /* ==========================================================================
+           RESPONSIVE DESIGN
+           ========================================================================== */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .card { padding: 1.5rem; }
+            h1 { font-size: 2rem; }
+            .session-nav { flex-direction: column; gap: 1rem; }
+            .nav-btn { margin: 0; width: 100%; }
+            .workflow-diagram { flex-direction: column; }
+            .wf-arrow { transform: rotate(90deg); margin: 5px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-pattern"></div>
+
+    <header>
+        <span class="championship-badge"><i class="fas fa-stopwatch"></i> Championship Training</span>
+        <div class="logo-container">
+            <img src="../logo.png" alt="TechTicket Logo" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'250\' height=\'50\'><text x=\'0\' y=\'40\' font-family=\'Arial\' font-size=\'32\' font-weight=\'bold\' fill=\'%23f97316\'><tspan fill=\'%23f8fafc\'&gt;Tech&lt;/tspan&gt;Ticket</text></svg>'">
+        </div>
+        <div class="program-title">Code Challenge Web Track</div>
+        <h1>Session 6 — Speed Building & Time Management</h1>
+    </header>
+
+    <main class="container">
+
+        <section class="card danger-card">
+            <h2>⏱️ Session Overview</h2>
+            <p>Welcome to Session 6. You know how to build beautiful layouts. You know how to make them responsive. You know how to read the constraints.</p>
+            <p><strong>But none of that matters if the clock runs out.</strong></p>
+            <p>In coding competitions, you are not just fighting the judges' requirements; you are fighting the timer. Brilliant students lose constantly because they spend 40 minutes picking the perfect shade of blue for a button, and leave half the page empty.</p>
+            <p>In this session, you will learn to code fast. You will learn:</p>
+            <ul>
+                <li>Why speed and time organization dictate the winner.</li>
+                <li>How to use the <strong>6-Step Time Management System</strong>.</li>
+                <li>How to write fast, structurally sound HTML without overthinking.</li>
+                <li>How to avoid the "CSS Perfection Trap."</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>💥 The Competition Reality</h2>
+            <p>During a challenge, the pressure is immense. When people panic, they start typing code randomly. This creates a messy "spaghetti" layout that is impossible to fix when it breaks.</p>
+            
+            <p><strong>The Most Common Ways to Lose Time:</strong></p>
+            <ul>
+                <li>❌ <strong>Over-designing:</strong> Adding complex animations or perfect box-shadows before the basic layout is even finished. (Layout points > Style points).</li>
+                <li>❌ <strong>Class Name Paralysis:</strong> Staring at the screen for 2 minutes trying to think of the perfect name for a div.</li>
+                <li>❌ <strong>Debugging Chaos:</strong> Writing 100 lines of CSS without checking the browser, then spending 20 minutes trying to figure out why the layout shattered.</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>⏳ The 6-Step Time Management System</h2>
+            <p>Champions don't code faster; they code smarter. They divide their total time strictly. If you have a 60-minute task, here is exactly how you should spend it:</p>
+
+            <div class="diagram-box">
+                <h4 style="color: var(--text-main); margin-bottom: 0.5rem;">60-Minute Task Distribution</h4>
+                
+                <div class="time-chart">
+                    <div class="tc-segment tc-read" title="Step 1: Read (10%)">R</div>
+                    <div class="tc-segment tc-plan" title="Step 2: Plan (5%)">P</div>
+                    <div class="tc-segment tc-html" title="Step 3: Build HTML (30%)">HTML</div>
+                    <div class="tc-segment tc-css" title="Step 4: Style CSS (40%)">CSS</div>
+                    <div class="tc-segment tc-polish" title="Step 5: Polish (10%)">Polish</div>
+                    <div class="tc-segment tc-debug" title="Step 6: Debug (5%)">Fix</div>
+                </div>
+
+                <div class="chart-legend">
+                    <div class="legend-item"><div class="legend-color" style="background:#3b82f6;"></div> Read (5m)</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#8b5cf6;"></div> Plan (3m)</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#10b981;"></div> HTML (18m)</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#f59e0b;"></div> CSS (24m)</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#f97316;"></div> Polish (6m)</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#ef4444;"></div> Debug (4m)</div>
+                </div>
+            </div>
+
+            <div class="diagram-box" style="background: transparent; border: none; padding: 1rem 0;">
+                <div class="workflow-diagram">
+                    <div class="wf-step" style="border-color: #3b82f6;">READ<br><span style="font-size:0.8rem; font-weight:normal; color:#94a3b8;">Understand rules</span></div>
+                    <div class="wf-arrow">→</div>
+                    <div class="wf-step" style="border-color: #10b981;">HTML<br><span style="font-size:0.8rem; font-weight:normal; color:#94a3b8;">Build skeleton</span></div>
+                    <div class="wf-arrow">→</div>
+                    <div class="wf-step" style="border-color: #f59e0b;">CSS<br><span style="font-size:0.8rem; font-weight:normal; color:#94a3b8;">Layout first, colors later</span></div>
+                    <div class="wf-arrow">→</div>
+                    <div class="wf-step" style="border-color: #ef4444;">FIX<br><span style="font-size:0.8rem; font-weight:normal; color:#94a3b8;">Resize & test</span></div>
+                </div>
+            </div>
+            
+            <p><strong>Crucial Rule:</strong> Step 3 (HTML) must be completely finished before you touch Step 4 (CSS). Do not jump back and forth.</p>
+        </section>
+
+        <section class="card">
+            <h2>🏎️ Speed Coding Strategies</h2>
+            <p>How do you actually type faster? By keeping it simple.</p>
+
+            <h3>1. Fast HTML Structure (The Skeleton)</h3>
+            <p>Use simple, generic class names. Don't waste time thinking. Use <code>.container</code>, <code>.card</code>, <code>.content</code>. Build the entire HTML file before opening CSS.</p>
+            
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="mac-dot dot-red"></div><div class="mac-dot dot-yellow"></div><div class="mac-dot dot-green"></div></div>
+                    <span class="code-tab">HTML (Fast)</span>
+                    <button class="btn-copy" onclick="copyCode('code-fast-html', this)">Copy Code</button>
+                </div>
+<pre id="code-fast-html"><code><span class="sy-cmt">&lt;!-- Boom. Done in 30 seconds. --&gt;</span>
+<span class="sy-tag">&lt;section</span> <span class="sy-attr">class</span>=<span class="sy-val">"container"</span><span class="sy-tag">&gt;</span>
+  <span class="sy-tag">&lt;h2</span> <span class="sy-attr">class</span>=<span class="sy-val">"title"</span><span class="sy-tag">&gt;</span>My Cards<span class="sy-tag">&lt;/h2&gt;</span>
+  <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"grid"</span><span class="sy-tag">&gt;</span>
+    <span class="sy-tag">&lt;div</span> <span class="sy-attr">class</span>=<span class="sy-val">"card"</span><span class="sy-tag">&gt;</span>
+      <span class="sy-tag">&lt;h3&gt;</span>Title 1<span class="sy-tag">&lt;/h3&gt;</span>
+      <span class="sy-tag">&lt;p&gt;</span>Desc 1<span class="sy-tag">&lt;/p&gt;</span>
+      <span class="sy-tag">&lt;a</span> <span class="sy-attr">href</span>=<span class="sy-val">"#"</span> <span class="sy-attr">class</span>=<span class="sy-val">"btn"</span><span class="sy-tag">&gt;</span>Click<span class="sy-tag">&lt;/a&gt;</span>
+    <span class="sy-tag">&lt;/div&gt;</span>
+    <span class="sy-cmt">&lt;!-- Copy/paste card 2 more times --&gt;</span>
+  <span class="sy-tag">&lt;/div&gt;</span>
+<span class="sy-tag">&lt;/section&gt;</span></code></pre>
+            </div>
+
+            <h3>2. Efficient CSS Styling</h3>
+            <p>Do layout first (Flexbox/Grid). Once the boxes are in the right place, then add padding, colors, and shadows.</p>
+            
+            <div class="code-window">
+                <div class="code-header">
+                    <div class="mac-dots"><div class="mac-dot dot-red"></div><div class="mac-dot dot-yellow"></div><div class="mac-dot dot-green"></div></div>
+                    <span class="code-tab">CSS (Layout First)</span>
+                    <button class="btn-copy" onclick="copyCode('code-fast-css', this)">Copy Code</button>
+                </div>
+<pre id="code-fast-css"><code><span class="sy-cmt">/* 1. Layout */</span>
+<span class="sy-sel">.grid</span> {
+  <span class="sy-prop">display</span>: <span class="sy-val">flex</span>;
+  <span class="sy-prop">gap</span>: <span class="sy-val">20px</span>;
+  <span class="sy-prop">flex-wrap</span>: <span class="sy-val">wrap</span>; <span class="sy-cmt">/* Boom, it's responsive automatically */</span>
+}
+
+<span class="sy-sel">.card</span> {
+  <span class="sy-prop">flex</span>: <span class="sy-val">1</span>;
+  <span class="sy-prop">min-width</span>: <span class="sy-val">250px</span>; <span class="sy-cmt">/* Protects from squishing */</span>
+  
+  <span class="sy-cmt">/* 2. Visuals (Do this AFTER layout works) */</span>
+  <span class="sy-prop">padding</span>: <span class="sy-num">20px</span>;
+  <span class="sy-prop">background</span>: <span class="sy-val">#333</span>;
+  <span class="sy-prop">border-radius</span>: <span class="sy-num">8px</span>;
+}</code></pre>
+            </div>
+            
+            <button class="collapsible-btn" onclick="toggleElement('explain-complex', this)">What is "Over-complex code"?</button>
+            <div id="explain-complex" class="collapsible-content">
+                <p>Over-complex code is when you write 10 lines of CSS to do what 2 lines could do.</p>
+                <p><strong>Bad (Slow):</strong> <code>margin-left: 10px; margin-right: 10px; margin-top: 10px;</code><br>
+                <strong>Good (Fast):</strong> <code>gap: 10px;</code> on the parent.</p>
+                <p><strong>Bad (Slow):</strong> Writing a separate media query for every card class.<br>
+                <strong>Good (Fast):</strong> Using <code>flex-wrap: wrap;</code> and <code>min-width</code> so you don't even need a media query!</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>⏰ Interactive Demo: The Pressure Cooker</h2>
+            <p>This is what competition pressure feels like. When you practice, you should always have a timer running. Practice pacing yourself.</p>
+
+            <div class="demo-panel">
+                <div class="timer-dashboard">
+                    <h3 style="color: white; margin-bottom: 0;">Task Timer</h3>
+                    <div id="countdown-display" class="timer-display">15:00</div>
+                    <div class="timer-controls">
+                        <button class="btn btn-danger" onclick="startTimer()">Start</button>
+                        <button class="btn" onclick="stopTimer()">Stop</button>
+                        <button class="btn" onclick="resetTimer(15)">15 Min</button>
+                        <button class="btn" onclick="resetTimer(30)">30 Min</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>🏋️‍♂️ Speed Drills</h2>
+            <p>Open your code editor. Start the timer above. Do not worry about making it beautiful; worry about getting it DONE before the clock hits zero.</p>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 1: The 5-Minute Card</h4>
+                <p><strong>Time Limit: 5 Minutes.</strong><br>Build a single card with an <code>h3</code>, <code>p</code>, and <code>button</code>. Give it a dark background, padding, and round corners.</p>
+                <button class="btn-hint" onclick="toggleElement('hint1', this)">💡 Stuck? Click here</button>
+                <div id="hint1" class="hint-content">
+                    Type HTML fast. Don't worry about exact colors. Just use <code>background: #222; padding: 20px; border-radius: 8px;</code>. Move on!
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 2: The 10-Minute Flex Row</h4>
+                <p><strong>Time Limit: 10 Minutes.</strong><br>Copy your card so you have 3. Wrap them in a container. Use Flexbox to make them side-by-side with a gap. Make them equal width.</p>
+                <button class="btn-hint" onclick="toggleElement('hint2', this)">💡 Show Hint</button>
+                <div id="hint2" class="hint-content">
+                    Container needs: <code>display: flex; gap: 20px;</code><br>
+                    Cards need: <code>flex: 1;</code>
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h4 style="color: var(--accent-blue);">Drill 3: The 5-Minute Rescue (Debug)</h4>
+                <p><strong>Time Limit: 5 Minutes.</strong><br>Imagine your layout breaks on mobile. Fix it immediately by adding two properties so the cards stack on small screens.</p>
+                <button class="btn-hint" onclick="toggleElement('hint3', this)">💡 Show Hint</button>
+                <div id="hint3" class="hint-content">
+                    Container: add <code>flex-wrap: wrap;</code><br>
+                    Cards: add <code>min-width: 250px;</code> (or whatever size fits your screen). No media query needed!
+                </div>
+            </div>
+        </section>
+
+        <section class="card challenge-box">
+            <h2 style="color: var(--accent-red); border-bottom-color: rgba(239, 68, 68, 0.3);">🔥 Speed Challenge: Full Card Section</h2>
+            
+            <p><strong>Set your timer for 30 Minutes.</strong> Do not cheat. Do not stop until you are finished or the timer rings.</p>
+            
+            <p><strong>Brief:</strong> "Build a responsive feature section displaying 3 services."</p>
+            
+            <p><strong>Requirements:</strong></p>
+            <ol>
+                <li><strong>HTML:</strong> A main section with a centered title ("Our Services"). A container holding 3 cards.</li>
+                <li><strong>Cards:</strong> Each card must have a Unicode icon (e.g., 🚀, 💻, 🔒), a title, a description, and a button.</li>
+                <li><strong>Layout:</strong> Flexbox. 3 columns on desktop. They MUST stack vertically on mobile (use <code>flex-wrap</code> or <code>@media</code>).</li>
+                <li><strong>Style:</strong> Clean padding, visible buttons, distinct card background color against a dark page background.</li>
+                <li><strong>Constraint:</strong> No over-designing. Do not add hover animations until the entire layout works perfectly on both desktop and mobile.</li>
+            </ol>
+            
+            <button class="btn-danger" style="padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; border: none; margin-top: 1rem;" onclick="toggleElement('challenge-answer', this)">Check Architecture</button>
+            
+            <div id="challenge-answer" class="collapsible-content" style="border-left-color: var(--accent-red); background: #020617;">
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">If your layout breaks, check this bare-minimum speed architecture:</p>
+<pre style="background: transparent; padding: 0;"><code><span class="sy-cmt">/* The Fastest Way to Win */</span>
+<span class="sy-class">*</span> { <span class="sy-prop">box-sizing</span>: <span class="sy-val">border-box</span>; }
+
+<span class="sy-sel">.section-title</span> { <span class="sy-prop">text-align</span>: <span class="sy-val">center</span>; <span class="sy-prop">margin-bottom</span>: <span class="sy-num">30px</span>; }
+
+<span class="sy-sel">.card-container</span> {
+  <span class="sy-prop">display</span>: <span class="sy-val">flex</span>;
+  <span class="sy-prop">gap</span>: <span class="sy-num">20px</span>;
+  <span class="sy-prop">flex-wrap</span>: <span class="sy-val">wrap</span>; <span class="sy-cmt">/* Saves you from writing media queries */</span>
+}
+
+<span class="sy-sel">.card</span> {
+  <span class="sy-prop">flex</span>: <span class="sy-val">1</span>;
+  <span class="sy-prop">min-width</span>: <span class="sy-num">250px</span>; <span class="sy-cmt">/* Forces stack on mobile */</span>
+  <span class="sy-prop">background</span>: <span class="sy-val">#1e293b</span>;
+  <span class="sy-prop">padding</span>: <span class="sy-num">20px</span>;
+  <span class="sy-prop">border-radius</span>: <span class="sy-num">8px</span>;
+}
+
+<span class="sy-sel">.icon</span> { <span class="sy-prop">font-size</span>: <span class="sy-num">40px</span>; <span class="sy-prop">text-align</span>: <span class="sy-val">center</span>; }</code></pre>
+            </div>
+        </section>
+
+        <section class="card" style="border-left: 4px solid var(--accent-cyan); background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), transparent);">
+            <h2 style="color: var(--accent-cyan); border-bottom-color: rgba(6, 182, 212, 0.2);">🏠 Homework: The Speed Run</h2>
+            <p>Pick any complex layout we built in Session 2 or Session 3 (like the Premium Sneaker Card).</p>
+            <ul>
+                <li>Delete your code.</li>
+                <li>Set a timer for <strong>20 minutes</strong>.</li>
+                <li>Rebuild it from scratch as fast as possible.</li>
+                <li>Focus on the HTML skeleton and Flexbox layout first. Leave gradients and shadows for the final 3 minutes.</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>📝 Session Summary</h2>
+            <ul>
+                <li><strong>Speed is a Strategy:</strong> Fast typing doesn't win competitions; structured thinking does.</li>
+                <li><strong>6-Step System:</strong> Read (10%), Plan (5%), HTML (30%), CSS Layout (40%), Polish (10%), Debug (5%).</li>
+                <li><strong>HTML First:</strong> Finish writing all your HTML tags before you write a single line of CSS.</li>
+                <li><strong>Layout First:</strong> In CSS, build your flexboxes and grids so boxes sit correctly before you waste time picking colors.</li>
+                <li><strong>Lazy Responsiveness:</strong> Using <code>flex-wrap: wrap;</code> and <code>min-width</code> is significantly faster than writing multiple <code>@media</code> queries.</li>
+            </ul>
+        </section>
+
+        <div class="session-nav">
+            <a href="session5.html" class="nav-btn">⬅ Previous Session</a>
+            <a href="session7.html" class="nav-btn">Next Session ➡</a>
+        </div>
+
+    </main>
+
+    <footer>
+        <div style="margin-bottom: 1rem; opacity: 0.7;">
+            <img src="../logo.png" alt="TechTicket Logo" style="max-height: 40px;" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'150\' height=\'30\'><text x=\'0\' y=\'25\' font-family=\'Arial\' font-size=\'20\' font-weight=\'bold\' fill=\'%23f97316\'><tspan fill=\'%23f8fafc\'&gt;Tech&lt;/tspan&gt;Ticket</text></svg>'">
+        </div>
+        <p>© TechTicket Academy — Educational material for TechTicket students only. Redistribution is not allowed.</p>
+    </footer>
+
+    <script>
+        // 1. Copy Code Functionality
+        function copyCode(elementId, btn) {
+            const codeEl = document.getElementById(elementId);
+            const text = codeEl.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = "Copied! ✓";
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // 2. Toggle Elements (Hints & Expandables)
+        function toggleElement(id, btn) {
+            const el = document.getElementById(id);
+            if (el.style.display === "block") {
+                el.style.display = "none";
+                if(btn && btn.classList.contains('collapsible-btn')) btn.classList.remove('active');
+            } else {
+                el.style.display = "block";
+                if(btn && btn.classList.contains('collapsible-btn')) btn.classList.add('active');
+            }
+        }
+
+        // 3. Timer Logic
+        let timerInterval;
+        let totalSeconds = 15 * 60; // Default 15 mins
+
+        function updateDisplay() {
+            const display = document.getElementById('countdown-display');
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            display.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if(totalSeconds <= 60 && totalSeconds > 0) {
+                display.style.color = '#f97316'; // Orange warning
+            } else if (totalSeconds === 0) {
+                display.style.color = '#ef4444'; // Red end
+                display.classList.remove('running');
+            } else {
+                display.style.color = 'var(--accent-red)';
+            }
+        }
+
+        function startTimer() {
+            const display = document.getElementById('countdown-display');
+            display.classList.add('running');
+            clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                if (totalSeconds > 0) {
+                    totalSeconds--;
+                    updateDisplay();
+                } else {
+                    stopTimer();
+                    alert("TIME IS UP! Hands off the keyboard.");
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('countdown-display').classList.remove('running');
+        }
+
+        function resetTimer(minutes) {
+            stopTimer();
+            totalSeconds = minutes * 60;
+            updateDisplay();
+        }
+
+        // Init timer display
+        window.onload = () => {
+            updateDisplay();
+        };
+    </script>
+</body>
+</html>
